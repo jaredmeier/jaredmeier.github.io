@@ -70,4 +70,13 @@
 				}
 			}
 		}
+
+		&.skills {
+			width: 5em;
+			height: 5em;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 2em;
+		}
 	}
