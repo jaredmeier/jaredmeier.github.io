@@ -3505,6 +3505,21 @@ body.is-preload #sidebar nav ul li {
   background-size: 100% 100%;
 }
 
+#intro .profile-img {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-bottom: 0.5em;
+}
+
+#intro img {
+  position: relative;
+  width: 100%;
+  max-width: 200px;
+  border: 1px solid transparent;
+  border-radius: 50%;
+}
+
 #intro p {
   font-size: 1.25em;
   color: rgba(255, 255, 255, 0.85);
