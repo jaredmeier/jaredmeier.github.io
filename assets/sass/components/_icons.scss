@@ -19,6 +19,9 @@
 			// &:last-child {
 			// 	padding-right: 0;
 			// }
+			@include breakpoint('<=small') {
+				padding: 0 0.1em;
+			}
 
 			> a, > span {
 				border: 0;
@@ -32,4 +35,8 @@
 
 [class^=devicon-] {
 	font-size: 3em;
+
+	@include breakpoint('<=small') {
+		font-size: 1.5em;
+	}
 }

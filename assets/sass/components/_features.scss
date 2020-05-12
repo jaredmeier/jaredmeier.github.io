@@ -20,6 +20,10 @@
 			display: flex;
 			flex-wrap: wrap;
 			justify-content: center;
+
+			@include breakpoint('<=small') {
+				justify-content: space-between;
+			}
 		}
 
 		section {

@@ -78,5 +78,11 @@
 			align-items: center;
 			justify-content: center;
 			padding: 2em;
+
+			@include breakpoint('<=small') {
+				width: 2.5em;
+				height: 2.5em;
+				padding: 0.5em;
+			}
 		}
 	}
