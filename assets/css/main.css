@@ -3545,6 +3545,8 @@ body.is-preload #sidebar nav ul li {
   width: 100%;
   max-width: 200px;
   height: auto;
+  -o-object-fit: contain;
+     object-fit: contain;
   border: 1px solid transparent;
   border-radius: 50%;
 }
