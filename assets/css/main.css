@@ -2813,7 +2813,7 @@ body.is-ie .spotlights > section {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  width: 50em;
+  width: 40em;
   -ms-flex: 1;
 }
 
