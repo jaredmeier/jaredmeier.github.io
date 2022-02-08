@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <title>title jar</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta property="og:title" content="title jar">
+  <meta property="og:description" content="description jar">
+  <link rel="icon" href="./images/jared-meier-cropped.png" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+  <div style="margin-top: 10%;">
+    <div class="row justify-content-center pb-4">
+      <div class="col-lg-6 col-sm-10">
+        <div class="card px-5 py-5 border-0">
+          <div class="card-body" onclick="toggleGo();">
+            <div class="row">
+              <div class="col">
+                <div class="row-lg-4">
+                  <h1 class="card-title text-center display-2" id="month">
+                    Month
+                  </h1>
+                </div>
+                <div class="row-lg-4">
+                  <h1 class="card-title text-center display-2" id="date">
+                    Date
+                  </h1>
+                </div>
+                <div class="row-lg-4">
+                  <h1 class="card-title text-center display-2" id="year">
+                    Year
+                  </h1>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var date = new Date;
+    var month;
+    var go = true;
+    var timer;
+    function goForth() {
+      if (!go) return;
+
+      date.setDate(date.getDate() + 1);
+
+      month = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(date);
+
+      document.getElementById("month").innerHTML = month;
+      document.getElementById("date").innerHTML = date.getDate();
+      document.getElementById("year").innerHTML = date.getFullYear();
+
+      timer = setTimeout(goForth, 100);
+    }
+
+    function toggleGo() {
+      go = !go;
+      if (go) goForth();
+      if (!go) clearTimeout(timer);
+    }
+    goForth();
+  </script>
+</body>
+
+</html>
