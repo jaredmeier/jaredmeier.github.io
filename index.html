@@ -17,41 +17,373 @@
 	<meta property="og:title" content="title jar">
 	<meta property="og:description" content="description jar">
 	<link rel="icon" href="./images/jared-meier-cropped.png" />
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+		crossorigin="anonymous"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Tiro+Gurmukhi&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 
 <body>
-	<div class="row justify-content-center align-content-center pb-4" style="height: 100vh;">
-		<div class="col-lg-8 col-sm-10 h-100">
-			<div class="card px-5 py-5 border-0 h-100 w-100">
-				<div class="card-body p-0 d-flex justify-content-center h-100">
-					<div class="card-text">
-						<iframe title="vimeo-player" src="https://player.vimeo.com/video/712413802?h=4d211854d0" width="100%"
-							height="50%" frameborder="0" allowfullscreen>
-						</iframe>
-						<p class="px-3">
-							this is my song and video about running a broccoli blog, which was my job last summer. it employs
-							metaphors
-							to explore
-							ideas around unpredictable growth. the tone is lighthearted. it is 1:45 long.
-							<br><br>
-							what’s that you say? too much going on?? let me make it simple for you: get bent
-						</p>
+	<div class="container-fluid">
+		<div class="container">
+			<div class="row justify-content-center align-content-center pb-4 text-white" style="height: 100vh;">
+				<div class="col-12 d-flex justify-content-center">
+					<div class="card p-lg-5 p-3 m-lg-3 m-0 border-0 text-dark color-card" style="max-width: 500px">
+						<div class="text-center">
+							<h2 class="card-title">WHAT YOUR FAVORITE COLOR SAYS ABOUT YOU</h4>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4">
+					<a href="#blue" class="link-unstyled">
+						<div class="card p-lg-5 p-3 m-lg-3 m-sm-2 m-2 border-0 container-blue color-card">
+							<h4 class="card-title text-center mb-0">BLUE</h4>
+						</div>
+					</a>
+				</div>
+				<div class="col-lg-4">
+					<a href="#green" class="link-unstyled">
+						<div class="card p-lg-5 p-3 m-lg-3 m-sm-2 m-2 border-0 container-green color-card">
+							<h4 class="card-title text-center mb-0">GREEN</h4>
+						</div>
+					</a>
+				</div>
+				<div class="col-lg-4">
+					<a href="#yellow" class="link-unstyled">
+						<div class="card p-lg-5 p-3 m-lg-3 m-sm-2 m-2 border-0 container-yellow color-card">
+							<h4 class="card-title text-center mb-0">YELLOW</h4>
+						</div>
+					</a>
+				</div>
+				<div class="col-lg-4">
+					<a href="#black" class="link-unstyled">
+						<div class="card p-lg-5 p-3 m-lg-3 m-sm-2 m-2 border-0 container-black color-card">
+							<h4 class="card-title text-center mb-0">BLACK</h4>
+						</div>
+					</a>
+				</div>
+				<div class="col-lg-4">
+					<a href="#purple" class="link-unstyled">
+						<div class="card p-lg-5 p-3 m-lg-3 m-sm-2 m-2 border-0 container-purple color-card">
+							<h4 class="card-title text-center mb-0">PURPLE</h4>
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="row container-blue" style="height: 100vh;" id="blue">
+			<div class="col-12 d-flex justify-content-center">
+				<div id="blue-slides" class="carousel slide h-100 d-flex justify-content-center" data-bs-interval="false">
+					<div class="carousel-indicators">
+						<button type="button" data-bs-target="#blue-slides" data-bs-slide-to="0" class="active" aria-current="true"
+							aria-label="Slide 1"></button>
+						<button type="button" data-bs-target="#blue-slides" data-bs-slide-to="1" aria-label="Slide 2"></button>
+						<button type="button" data-bs-target="#blue-slides" data-bs-slide-to="2" aria-label="Slide 3"></button>
+						<button type="button" data-bs-target="#blue-slides" data-bs-slide-to="3" aria-label="Slide 4"></button>
+					</div>
+					<div class="d-flex align-items-center justify-content-center h-100 slides-container">
+						<div class="carousel-inner d-flex align-items-center w-100">
+							<div class="carousel-item active">
+								<h5>
+									You are annoyed by the amount of communication around practical matters with your friends – in some
+									instances, too
+									little, and in others, too much.
+								</h5>
+							</div>
+							<div class="carousel-item">
+								<h5>
+									Before his 4-day trip to Boston, he asks you to pick him up from the airport on his return, and during
+									his time away he
+									has neglected to remind you. Are you to remember not just the favor, but the time and date as well?
+									You find his
+									previous text with the details, but then you text him anyway <i>what time again?</i> as a reminder
+									that your
+									schedule is
+									flexible but still planned, and that you have other important things to remember.
+								</h5>
+							</div>
+							<div class="carousel-item">
+								<h5>
+									Half a year later, he asks you to pick
+									him up from the airport again, and this time he reminds you the day before. But how could you forget
+									such an important
+									thing like picking up your friend from the airport? Does he believe you don’t care, that you don’t
+									listen?
+								</h5>
+							</div>
+							<div class="carousel-item">
+								<h5>
+									You care about being a generous friend and a good listener.
+								</h5>
+							</div>
+						</div>
+					</div>
+					<button class="carousel-control-prev" style="left: -10px;" type="button" data-bs-target="#blue-slides"
+						data-bs-slide="prev">
+						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+					</button>
+					<button class="carousel-control-next" style="right: -10px;" type="button" data-bs-target="#blue-slides"
+						data-bs-slide="next">
+						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="row container-green" style="height: 100vh;" id="green">
+			<div class="col-12 d-flex justify-content-center">
+				<div id="green-slides" class="carousel slide h-100 d-flex justify-content-center" data-bs-interval="false">
+					<div class="carousel-indicators">
+						<button type="button" data-bs-target="#green-slides" data-bs-slide-to="0" class="active" aria-current="true"
+							aria-label="Slide 1"></button>
+						<button type="button" data-bs-target="#green-slides" data-bs-slide-to="1" aria-label="Slide 2"></button>
+						<button type="button" data-bs-target="#green-slides" data-bs-slide-to="2" aria-label="Slide 3"></button>
+					</div>
+					<div class="d-flex align-items-center justify-content-center h-100 slides-container">
+						<div class="carousel-inner d-flex align-items-center w-100">
+							<div class="carousel-item active">
+								<h5>
+									Sometimes unwittingly but more importantly often intentionally, you hide in your casual conversations
+									with new
+									acquaintances quizzes on matters important to you, holding correct answers as price of admission, and
+									wrong ones as
+									grounds for dismissal.
+								</h5>
+							</div>
+							<div class="carousel-item">
+								<h5>
+									No, she does not like that movie. Which sucks, because you were getting along so well.
+								</h5>
+							</div>
+							<div class="carousel-item">
+								<h5>
+									You know where you stand, and where you want others to stand.
+								</h5>
+							</div>
+						</div>
+					</div>
+					<button class="carousel-control-prev" style="left: -10px;" type="button" data-bs-target="#green-slides"
+						data-bs-slide="prev">
+						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+					</button>
+					<button class="carousel-control-next" style="right: -10px;" type="button" data-bs-target="#green-slides"
+						data-bs-slide="next">
+						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="row container-yellow" style="height: 100vh;" id="yellow">
+			<div class="col-12 d-flex justify-content-center">
+				<div id="yellow-slides" class="carousel slide h-100 d-flex justify-content-center" data-bs-interval="false">
+					<div class="carousel-indicators">
+						<button type="button" data-bs-target="#yellow-slides" data-bs-slide-to="0" class="active"
+							aria-current="true" aria-label="Slide 1"></button>
+						<button type="button" data-bs-target="#yellow-slides" data-bs-slide-to="1" aria-label="Slide 2"></button>
+						<button type="button" data-bs-target="#yellow-slides" data-bs-slide-to="2" aria-label="Slide 3"></button>
+						<button type="button" data-bs-target="#yellow-slides" data-bs-slide-to="3" aria-label="Slide 3"></button>
+					</div>
+					<div class="d-flex align-items-center justify-content-center h-100 slides-container">
+						<div class="carousel-inner d-flex align-items-center w-100">
+							<div class="carousel-item active">
+								<h5>
+									You have a compulsive need to take up as little space as possible, to be fluid in every situation.
+								</h5>
+							</div>
+							<div class="carousel-item">
+								<h5>
+									On a trip upstate with a couple of friends you do not care which way you go. You do not care where you
+									stop to eat. You
+									have made being around you as easy as not being around you. From the back of the car you ask them to
+									put on a song but
+									they can’t hear you — you insist it is not important, this they hear. In the hotel you quickly end the
+									debate over who
+									should get the beds, you’re happy to take the pull-out. You do this again at the next hotel and at the
+									AirBnB, taking
+									the cot, the air mattress.
+								</h5>
+							</div>
+							<div class="carousel-item">
+								<h5>
+									But though you’ve given them the better sleep options, over the course of the trip they begin to
+									appear tired, stretched
+									out. In your efforts to minimize, have you demanded others expand? No, you have never said this. In
+									fact, you have never
+									asked much of anyone. You do not let your wants influence others – you hold them closely, let them
+									ferment.
+								</h5>
+							</div>
+							<div class="carousel-item">
+								<h5>
+									You are easygoing and casual, and your lack of presence gives space for others’ desires to bloom.
+								</h5>
+							</div>
+						</div>
+					</div>
+					<button class="carousel-control-prev" style="left: -10px;" type="button" data-bs-target="#yellow-slides"
+						data-bs-slide="prev">
+						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+					</button>
+					<button class="carousel-control-next" style="right: -10px;" type="button" data-bs-target="#yellow-slides"
+						data-bs-slide="next">
+						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="row container-black text-white" style="height: 100vh;" id="black">
+			<div class="col-12 d-flex justify-content-center">
+				<div id="black-slides" class="carousel slide h-100 d-flex justify-content-center" data-bs-interval="false">
+					<div class="carousel-indicators">
+						<button type="button" data-bs-target="#black-slides" data-bs-slide-to="0" class="active" aria-current="true"
+							aria-label="Slide 1"></button>
+						<button type="button" data-bs-target="#black-slides" data-bs-slide-to="1" aria-label="Slide 2"></button>
+						<button type="button" data-bs-target="#black-slides" data-bs-slide-to="2" aria-label="Slide 3"></button>
+					</div>
+					<div class="d-flex align-items-center justify-content-center h-100 slides-container">
+						<div class="carousel-inner d-flex align-items-center w-100">
+							<div class="carousel-item active">
+								<h5>
+									You believe that your close relations know you well, and in knowing you well, require little guidance
+									to your thoughts
+									and feelings.
+								</h5>
+							</div>
+							<div class="carousel-item">
+								<h5>
+									On a work trip across the country, you miss your friends. You feel distant from them, even more you
+									have been lately.
+									They haven’t called or texted. (Have you?) Each moment of silence is an opportunity to reach out to
+									you that they have
+									not taken. A mountain of misunderstanding grows larger, how will they ever get down? You could guide
+									them, but that
+									would require shouting, and you are exhausted. It’s a good time to leave, they cannot see you, don’t
+									care to. Your
+									journey will take you to others who do.
+								</h5>
+							</div>
+							<div class="carousel-item">
+								<h5>
+									Your maze of feelings is beautiful and deserves reverential study, the guarded prize at the end needs
+									nothing less than
+									a loving, clairvoyant art.
+								</h5>
+							</div>
+						</div>
+					</div>
+					<button class="carousel-control-prev" style="left: -10px;" type="button" data-bs-target="#black-slides"
+						data-bs-slide="prev">
+						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+					</button>
+					<button class="carousel-control-next" style="right: -10px;" type="button" data-bs-target="#black-slides"
+						data-bs-slide="next">
+						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="row container-purple text-white" style="height: 100vh;" id="purple">
+			<div class="col-12 d-flex justify-content-center">
+				<div id="purple-slides" class="carousel slide h-100 d-flex justify-content-center" data-bs-interval="false">
+					<div class="carousel-indicators">
+						<button type="button" data-bs-target="#purple-slides" data-bs-slide-to="0" class="active"
+							aria-current="true" aria-label="Slide 1"></button>
+						<button type="button" data-bs-target="#purple-slides" data-bs-slide-to="1" aria-label="Slide 2"></button>
+						<button type="button" data-bs-target="#purple-slides" data-bs-slide-to="2" aria-label="Slide 3"></button>
+						<button type="button" data-bs-target="#purple-slides" data-bs-slide-to="3" aria-label="Slide 3"></button>
+						<button type="button" data-bs-target="#purple-slides" data-bs-slide-to="4" aria-label="Slide 3"></button>
+					</div>
+					<div class="d-flex align-items-center justify-content-center h-100 slides-container">
+						<div class="carousel-inner d-flex align-items-center w-100">
+							<div class="carousel-item active">
+								<h5>
+									The friends you collect as you move through life are progressively more accomplished and interesting,
+									and in each
+									successor’s wake you find a cruel impulse toward an old friend.
+								</h5>
+							</div>
+							<div class="carousel-item">
+								<h5>
+									When your friend from high school says she is coming, you are filled with dread. She is still
+									small-minded and
+									unrefined, she has not changed. (But you have, haven’t you?) You will either have to find something
+									else to do, maybe
+									get drunk in the park and look for the fireworks, or bring her along to the party and watch over her
+									the whole time,
+									pull aside your new friends now and again to apologize for what she says.
+								</h5>
+							</div>
+							<div class="carousel-item">
+								<h5>
+									When you’ve had to do this before, your new friends, bless them, were kind and sympathetic – they
+									liked her, they said.
+									And that one time when some new friends were not kind and sympathetic? You defended your old friend,
+									and those new
+									friends are friends no more.
+								</h5>
+							</div>
+							<div class="carousel-item">
+								<h5>
+									You do care, and you are loyal, even if that loyalty is sometimes swallowed by a fear of being stuck.
+									Don’t be afraid,
+									your new friends signal your growth. Be bold, your growth will inevitably cause turbulence for those
+									from your past.
+								</h5>
+							</div>
+							<div class="carousel-item">
+								<h5>
+									Hold dear your loyalty – it shines on all of your friends, from new to old, high to low.
+								</h5>
+							</div>
+						</div>
+					</div>
+					<button class="carousel-control-prev" style="left: -10px;" type="button" data-bs-target="#purple-slides"
+						data-bs-slide="prev">
+						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+					</button>
+					<button class="carousel-control-next" style="right: -10px;" type="button" data-bs-target="#purple-slides"
+						data-bs-slide="next">
+						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="row justify-content-center align-content-center pb-4" style="height: 100vh;">
+			<div class="col-lg-8 col-sm-10 h-100">
+				<div class="card px-5 py-5 border-0 h-100 w-100">
+					<div class="card-body p-0 d-flex justify-content-center h-100">
+						<div class="card-text">
+							<iframe title="vimeo-player" src="https://player.vimeo.com/video/712413802?h=4d211854d0" width="100%"
+								height="50%" frameborder="0" allowfullscreen>
+							</iframe>
+							<p class="px-3">
+								this is my song and video about running a broccoli blog, which was my job last summer. it employs
+								metaphors
+								to explore
+								ideas around unpredictable growth. the tone is lighthearted. it is 1:45 long.
+								<br><br>
+								what’s that you say? too much going on?? let me make it simple for you: get bent
+							</p>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="row justify-content-center pb-4">
-		<div class="col-lg-4 col-sm-10">
-			<div class="card px-5 py-5 border-0">
-				<img src="./images/the-rock.png" class="card-img-top" alt="the rock">
-				<div class="card-body">
-					<h5 class="card-title">the rock</h5>
-					<p class="card-text">
-						This rock crushed my great uncle. He had it coming. - jar
-					</p>
+		<div class="row justify-content-center pb-4">
+			<div class="col-lg-4 col-sm-10">
+				<div class="card px-5 py-5 border-0">
+					<img src="./images/the-rock.png" class="card-img-top" alt="the rock">
+					<div class="card-body">
+						<h5 class="card-title">the rock</h5>
+						<p class="card-text">
+							This rock crushed my great uncle. He had it coming. - jar
+						</p>
+					</div>
 				</div>
 			</div>
 		</div>
