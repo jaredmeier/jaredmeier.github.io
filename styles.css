@@ -4,6 +4,12 @@
   --myblack: rgb(0, 0, 0);
   --mygreen: rgb(151, 197, 72);
   --myyellow: rgb(246, 203, 88);
+  --myred: rgb(158, 42, 43);
+  --mypink: rgb(255, 191, 183);
+  --myorange: rgb(252, 159, 91);
+  --mygrey: rgb(203, 203, 212);
+  --mylightblue: rgb(163, 231, 252);
+  --mydarkgreen: rgb(18, 102, 79);
 }
 
 .container-blue {
@@ -26,6 +32,30 @@
   background-color: var(--myyellow) !important;
 }
 
+.container-red {
+  background-color: var(--myred) !important;
+}
+
+.container-pink {
+  background-color: var(--mypink) !important;
+}
+
+.container-orange {
+  background-color: var(--myorange) !important;
+}
+
+.container-grey {
+  background-color: var(--mygrey) !important;
+}
+
+.container-lightblue {
+  background-color: var(--mylightblue) !important;
+}
+
+.container-darkgreen {
+  background-color: var(--mydarkgreen) !important;
+}
+
 .link-unstyled,
 .link-unstyled:link,
 .link-unstyled:hover {
@@ -43,3 +73,50 @@
   width: 100%;
 }
 
+.img-container {
+  position: fixed;
+  left: 0%;
+  bottom: 50%;
+}
+
+@keyframes laurette-fly {
+  0%   {visibility: visible; transform: scale(0);}
+  100% {transform: scale(1.5);}
+}
+
+.laurette-fly {
+  height: 50%;
+  left: -10%;
+  bottom: 25%;
+  position: fixed;
+  transform-origin: 50% 50%; 
+  visibility: hidden;
+}
+
+@keyframes laurette-coat {
+  0%   {visibility: visible; bottom: -50%;}
+  60%  {bottom: 0px;}
+  90%  {bottom: 0px;}
+  100% {bottom: -50%;}
+}
+
+.laurette-coat {
+  height: 50%;
+  position: fixed;
+  visibility: hidden;
+}
+
+@keyframes laurette-shoe {
+  0%   {visibility: visible; transform: scale(10);}
+  10%  {transform: scale(1);}
+  100% {transform: scale(1);}
+}
+
+.laurette-shoe {
+  height: 50%;
+  left: 25%;
+  bottom: 25%;
+  position: fixed;
+  transform-origin: 50% 50%; 
+  visibility: hidden;
+}

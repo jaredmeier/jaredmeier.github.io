@@ -1,0 +1,167 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>title jar</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta property="og:title" content="title jar">
+	<meta property="og:description" content="description jar">
+	<link rel="icon" href="./images/jared-meier-cropped.png" />
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+		crossorigin="anonymous"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Tiro+Gurmukhi&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+
+<body>
+	<div class="container-fluid h-100" style="overflow:hidden;">
+		<div class="container">
+			<div class="row justify-content-center align-content-center pb-4 text-white" style="height: 100vh;">
+				<div class="col-12 d-flex justify-content-center">
+					<div class="card p-lg-5 p-3 m-lg-3 m-0 border-0 text-dark color-card" style="max-width: 500px">
+						<div class="text-center">
+							<h1 class="card-title">HBD LAURETTE</h1>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-sm-6 col-6">
+					<div class="card m-lg-3 m-sm-2 m-2 border-0 container-purple color-card">
+						<button type="button" class="btn text-white border-0 p-lg-5 px-1 py-4" onclick="play('GARDEN')">
+							<h4 class="card-title text-center mb-0">GARDEN</h4>
+						</button>
+					</div>
+				</div>
+				<div class="col-lg-4 col-sm-6 col-6">
+					<div class="card m-lg-3 m-sm-2 m-2 border-0 container-green color-card">
+						<button type="button" class="btn text-white border-0 p-lg-5 px-1 py-4" onclick="play('BLOG')">
+							<h4 class="card-title text-center mb-0">BLOG</h4>
+						</button>
+					</div>
+				</div>
+				<div class="col-lg-4 col-sm-6 col-6">
+					<div class="card m-lg-3 m-sm-2 m-2 border-0 container-yellow color-card">
+						<button type="button" class="btn text-white border-0 p-lg-5 px-1 py-4" onclick="play('DEMO')">
+							<h4 class="card-title text-center mb-0">DEMO</h4>
+						</button>
+					</div>
+				</div>
+				<div class="col-lg-4 col-sm-6 col-6">
+					<div class="card m-lg-3 m-sm-2 m-2 border-0 container-red color-card">
+						<button type="button" class="btn text-white border-0 p-lg-5 px-1 py-4" onclick="onHeheClick()">
+							<h4 class="card-title text-center mb-0">HEHE</h4>
+						</button>
+					</div>
+				</div>
+				<div class="col-lg-4 col-sm-6 col-6">
+					<div class="card m-lg-3 m-sm-2 m-2 border-0 container-blue color-card">
+						<button type="button" class="btn text-white border-0 p-lg-5 px-1 py-4" onclick="onHbdClick()">
+							<h4 class="card-title text-center mb-0">HBD</h4>
+						</button>
+					</div>
+				</div>
+				<div class="col-lg-4 col-sm-6 col-6">
+					<div class="card m-lg-3 m-sm-2 m-2 border-0 container-black color-card">
+						<button type="button" class="btn text-white border-0 p-lg-5 px-1 py-4" onclick="onErrorClick()">
+							<h4 class="card-title text-center mb-0">ERROR</h4>
+						</button>
+					</div>
+				</div>
+				<div class="col-lg-4 col-sm-6 col-6">
+					<div class="card m-lg-3 m-sm-2 m-2 border-0 container-grey color-card">
+						<button type="button" class="btn text-white border-0 p-lg-5 px-1 py-4" onclick="play('TIKKA')">
+							<h4 class="card-title text-center mb-0">TIKKA</h4>
+						</button>
+					</div>
+				</div>
+				<div class="col-lg-4 col-sm-6 col-6">
+					<div class="card m-lg-3 m-sm-2 m-2 border-0 container-orange color-card">
+						<button type="button" class="btn text-white border-0 p-lg-5 px-1 py-4" onclick="play('RARE')">
+							<h4 class="card-title text-center mb-0">RARE</h4>
+						</button>
+					</div>
+				</div>
+				<div class="col-lg-4 col-sm-6 col-6">
+					<div class="card m-lg-3 m-sm-2 m-2 border-0 container-lightblue color-card">
+						<button type="button" class="btn text-white border-0 p-lg-5 px-1 py-4" onclick="play('SLAP')">
+							<h4 class="card-title text-center mb-0">SLAP</h4>
+						</button>
+					</div>
+				</div>
+				<div class="col-lg-4 col-sm-6 col-6">
+					<div class="card m-lg-3 m-sm-2 m-2 border-0 container-pink color-card">
+						<button type="button" class="btn text-white border-0 p-lg-5 px-1 py-4" onclick="play('SLEEVE')">
+							<h4 class="card-title text-center mb-0">SLEEVE</h4>
+						</button>
+					</div>
+				</div>
+				<div class="col-lg-4 col-sm-6 col-6">
+					<div class="card m-lg-3 m-sm-2 m-2 border-0 container-darkgreen color-card">
+						<button type="button" class="btn text-white border-0 p-lg-5 px-1 py-4" onclick="play('UNCLE')">
+							<h4 class="card-title text-center mb-0">UNCLE</h4>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="h-25" style="overflow:hidden;">
+				<img src="./images/laurette-fly.png" class="laurette-fly" id="fly">
+			</div>
+			<div class="h-25" style="overflow:hidden;">
+				<img src="./images/laurette-coat.png" class="laurette-coat" id="coat">
+			</div>
+			<div class="h-25" style="overflow:hidden;">
+				<img src="./images/laurette-shoe.png" class="laurette-shoe" id="shoe">
+			</div>
+		</div>
+	</div>
+
+
+	<script>
+		const SOUNDS = {
+			HBD: './brrrup/birthday.wav',
+			BLOG: './brrrup/blog.wav',
+			DEMO: './brrrup/demo.wav',
+			ERROR: './brrrup/error.wav',
+			GARDEN: './brrrup/garden.wav',
+			LOL: './brrrup/lol.wav',
+			TIKKA: './brrrup/masala.wav',
+			RARE: './brrrup/rare.wav',
+			SLAP: './brrrup/slap.wav',
+			SLEEVE: './brrrup/sleeve.wav',
+			UNCLE: './brrrup/uncle.wav',
+		};
+		function play(file) {
+			const audio = new Audio(SOUNDS[file]);
+			audio.play();
+		}
+		function onHbdClick() {
+			play('HBD');
+			const el = document.getElementById('coat');
+			const dup = el.cloneNode(true);
+			el.parentNode.replaceChild(dup, el);
+			dup.style.animation = "laurette-coat 3s ease-out";
+		}
+		function onHeheClick() {
+			play('LOL');
+			const el = document.getElementById('fly');
+			const dup = el.cloneNode(true);
+			el.parentNode.replaceChild(dup, el);
+			dup.style.animation = "laurette-fly 3s ease-out";
+		}
+		function onErrorClick() {
+			play('ERROR');
+			const el = document.getElementById('shoe');
+			const dup = el.cloneNode(true);
+			el.parentNode.replaceChild(dup, el);
+			dup.style.animation = "laurette-shoe 1s ease-out";
+		}
+	</script>
+</body>
+
+</html>
