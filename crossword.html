@@ -1,0 +1,143 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>crossword</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta property="og:title" content="crossword">
+	<meta property="og:description" content="crossword">
+	<link rel="icon" href="./images/jared-meier-cropped.png" />
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Tiro+Gurmukhi&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" href="styles.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+	<div class="container-fluid grid" tabindex="0">
+	</div>
+	<div class="button-container py-3">
+		<button class="arrow-button">
+			<i class="fa fa-arrow-up"></i>
+		</button>		
+	</div>
+	
+
+	<script>
+		let selected = null;
+
+		// horizontal auto-focus 0; vertical 1
+		let mode = 0;
+
+		const button = document.querySelector('.arrow-button');
+		button.addEventListener('click', (_event) => {
+			toggleMode();
+		});
+
+		function toggleSelected(square) {
+			if (selected) {
+				selected.classList.remove('selected');
+			}
+
+			if (!square) return;
+
+			if (!square.classList.contains('blacked-out')) {
+				selected = square;
+				square.classList.add('selected');
+			};
+		}
+
+		function toggleMode() {
+			if (mode === 0) {
+				mode = 1;
+			} else {
+				mode = 0;
+			}
+			button.classList.toggle('down');
+		}
+		
+		const gridContainer = document.querySelector('.grid');
+
+		gridContainer.addEventListener('keydown', (event) => {
+			if (event.keyCode ===220) {
+				toggleMode();
+			}
+		})
+
+		const size = 15;
+		
+		for (let i = 0; i < size; i++) {
+			const row = document.createElement('div');
+			row.classList.add('row');
+			gridContainer.appendChild(row);
+			
+			for (let j = 0; j < size; j++) {
+				const square = document.createElement('input');
+				square.classList.add('square', 'col-sm-1');
+				square.setAttribute('type', 'text');
+				square.setAttribute('maxlength', '1');
+				row.appendChild(square);
+			}
+		}
+		
+		const squares = document.querySelectorAll('.square');
+		squares.forEach((square) => {
+			square.addEventListener('click', (event) => {
+				toggleSelected(square);
+			});
+
+			square.addEventListener('dblclick', (event) => {
+				square.classList.toggle('blacked-out');
+				if (square.classList.contains('blacked-out')) {
+					square.readOnly = true;
+				} else {
+					square.readOnly = false;
+				}
+
+				if (selected) {
+					selected.classList.remove('selected');
+					selected = null;
+				}
+			});
+
+			square.addEventListener('keydown', (event) => {
+				if (event.key.match(/^[a-zA-Z]$/)) {
+					setTimeout(() => {
+						if (mode === 0) {
+							const nextSquare = square.nextElementSibling;
+							if (nextSquare) {
+								nextSquare.focus();
+								toggleSelected(square);
+							}
+						} else {
+							const parent = square.parentNode;
+							const children = parent.children;
+
+							let childIndex = null;
+							for (let i = 0; i < children.length; i++) {
+								if (children[i] === square) {
+									childIndex = i;
+									break;
+								}
+							}
+							const nextRow = parent.nextElementSibling;
+							if (nextRow) {
+								const nextSquare = nextRow.children[childIndex];
+								nextSquare.focus();
+								toggleSelected(square);
+							}
+						}
+					}, 10);
+				}
+			});
+
+		});
+	</script>
+</body>
+
+</html>

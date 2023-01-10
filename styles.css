@@ -120,3 +120,51 @@
   transform-origin: 50% 50%; 
   visibility: hidden;
 }
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1rem;
+  justify-content: center;
+}
+
+.square-container {
+  margin: 0;
+}
+
+.square {
+  background-color: rgb(224, 224, 224);
+  border: 1px solid black;
+  height: 48px;
+  width: 48px;
+  text-align: center;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+}
+
+.square.selected {
+  border: 1px solid red;
+}
+
+.square.blacked-out {
+  background-color: rgb(198, 198, 198);
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+}
+
+.arrow-button {
+  font-size: 2rem;
+  color: #0d6efd;
+}
+
+.arrow-button .fa-arrow-up {
+  transform: rotate(90deg);
+}
+
+.arrow-button.down .fa-arrow-up {
+  transform: rotate(180deg);
+}
