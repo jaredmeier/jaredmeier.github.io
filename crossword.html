@@ -205,6 +205,21 @@
 			focusNextOrPrev(square, true);
 		}
 
+		function renumber() {
+			const squareContainers = gridContainer.querySelectorAll('.square-container');
+			let counter = 1;
+			squareContainers.forEach((div) => {
+				const square = div.querySelector('.square');
+				const numDiv = div.querySelector('.square-number');
+				if (!square.classList.contains('blacked-out')) {
+					numDiv.innerHTML = counter;
+					counter++;
+				} else {
+					numDiv.innerHTML = '';
+				}
+			});
+		}
+
 		function toggleBlackedOut(square) {
 			square.classList.toggle('blacked-out');
 
@@ -213,6 +228,8 @@
 			} else {
 				square.readOnly = false;
 			}
+
+			renumber();
 		}
 
 		function toggleBlackSymmetricalSquares(square) {
