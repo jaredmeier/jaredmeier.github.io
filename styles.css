@@ -134,17 +134,26 @@
 }
 
 .square {
-  background-color: rgb(224, 224, 224);
+  background-color: #f8f9fa;
   border: 1px solid black;
   height: 48px;
   width: 48px;
   text-align: center;
   font-size: 1.5rem;
   text-transform: uppercase;
+  caret-color: transparent;
+}
+
+.square:focus{
+  outline: none;
 }
 
 .square.selected {
-  border: 1px solid red;
+  border: 3px dashed #6f42c1;
+}
+
+.square.highlighted {
+  border-style: dashed;
 }
 
 .square.blacked-out {
@@ -167,4 +176,16 @@
 
 .arrow-button.down .fa-arrow-up {
   transform: rotate(180deg);
+}
+
+.square-container {
+  padding: 0;
+  margin: 0;
+}
+
+.square-number {
+  position: absolute;
+  padding-left: 3px;
+  padding-top: 2px;
+  font-size: 0.5rem;
 }

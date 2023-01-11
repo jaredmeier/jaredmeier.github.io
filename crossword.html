@@ -39,6 +39,38 @@
 			toggleMode();
 		});
 
+		const gridContainer = document.querySelector('.grid');
+		const size = 15;
+
+		let counter = 1;
+		for (let i = 0; i < size; i++) {
+			const row = document.createElement('div');
+			row.classList.add('row');
+			gridContainer.appendChild(row);
+			
+			for (let j = 0; j < size; j++) {
+				const squareContainer = document.createElement('div');
+				squareContainer.classList.add('square-container', 'col');
+				row.appendChild(squareContainer);
+
+				const div = document.createElement('div');
+				div.classList.add('square-number');
+				div.innerHTML = counter;
+				squareContainer.appendChild(div);
+
+				const square = document.createElement('input');
+				square.classList.add('square', 'col-sm-1');
+				square.setAttribute('type', 'text');
+				square.setAttribute('maxlength', '1');
+				squareContainer.appendChild(square);
+
+				counter++;
+			}
+		}
+		
+		const rows = document.querySelectorAll('.row');
+		const squares = document.querySelectorAll('.square');
+
 		function toggleSelected(square) {
 			if (selected) {
 				selected.classList.remove('selected');
@@ -59,36 +91,112 @@
 				mode = 0;
 			}
 			button.classList.toggle('down');
+			if (selected) highlightDirection(selected);
 		}
-		
-		const gridContainer = document.querySelector('.grid');
 
-		gridContainer.addEventListener('keydown', (event) => {
-			if (event.keyCode ===220) {
-				toggleMode();
-			}
-		})
+		function setMode(val) {
+			mode = val;
+			if (mode === 1 && !button.classList.contains('down')) button.classList.add('down');
+			if (mode === 0 && button.classList.contains('down')) button.classList.remove('down');
 
-		const size = 15;
-		
-		for (let i = 0; i < size; i++) {
-			const row = document.createElement('div');
-			row.classList.add('row');
-			gridContainer.appendChild(row);
-			
-			for (let j = 0; j < size; j++) {
-				const square = document.createElement('input');
-				square.classList.add('square', 'col-sm-1');
-				square.setAttribute('type', 'text');
-				square.setAttribute('maxlength', '1');
-				row.appendChild(square);
+			if (selected) highlightDirection(selected);
+		}
+
+		function rowNode(square) {
+			return square.parentNode.parentNode;
+		}
+
+		function highlightDirection(square) {
+			clearHighlights();
+			if (mode === 0) {
+				highlightRow(square);
+			} else {
+				highlightCol(square);
 			}
 		}
+
+		function highlightRow(square) {
+			const rowSquares = rowNode(square).querySelectorAll('.square');
+			for (let i = 0; i < rowSquares.length; i++) {
+				rowSquares[i].classList.add('highlighted');
+			}
+		}
+
+		function highlightCol(square) {
+			const childIdx = childIndex(square);
+			rows.forEach((row) => {
+				const square = row.querySelectorAll('.square')[childIdx];
+				square.classList.add('highlighted');
+			});
+		}
+
+		function clearHighlights() {
+			squares.forEach((square) => square.classList.remove('highlighted'));
+		}
+
+		function childIndex(square) {
+			const children = rowNode(square).querySelectorAll('.square');
+
+			let childIdx = null;
+			for (let i = 0; i < children.length; i++) {
+				if (children[i] === square) {
+					childIdx = i;
+					break;
+				}
+			}
+			return childIdx;
+		}
+
+		function focusNextOrPrev(square, prev) {
+			if (mode === 0) {
+				const rowSquares = rowNode(square).querySelectorAll('.square');
+				let idx = childIndex(square);
+				let nextSquare;
+				while (!nextSquare || (nextSquare && nextSquare.classList.contains('blacked-out'))) {
+					idx = prev ? idx - 1 : idx + 1;
+
+					if (idx < 0) break;
+
+					nextSquare = rowSquares[idx];
+
+					if (!nextSquare) break;
+				}
+				if (nextSquare) {
+					nextSquare.focus();
+				}
+			} else {
+				const row = rowNode(square);
+				const childIdx = childIndex(square);
+				let currRow = row;
+				let nextRow;
+				let nextSquare;
+				while (!nextSquare || (nextSquare && nextSquare.classList.contains('blacked-out'))) {
+					nextRow = prev ? currRow.previousElementSibling : currRow.nextElementSibling;
+
+					if (!nextRow) break;
+
+					nextSquare = nextRow.querySelectorAll('.square')[childIdx];
+					currRow = nextRow;
+				}
+
+				if (nextSquare) {
+					nextSquare.focus();
+				}
+			}
+		}
+
+		function focusNext(square) {
+			focusNextOrPrev(square, false);
+		}
+
+		function focusPrevious(square) {
+			focusNextOrPrev(square, true);
+		}
 		
-		const squares = document.querySelectorAll('.square');
 		squares.forEach((square) => {
-			square.addEventListener('click', (event) => {
+			square.addEventListener('focus', (event) => {
 				toggleSelected(square);
+				highlightDirection(square);
 			});
 
 			square.addEventListener('dblclick', (event) => {
@@ -106,33 +214,46 @@
 			});
 
 			square.addEventListener('keydown', (event) => {
-				if (event.key.match(/^[a-zA-Z]$/)) {
-					setTimeout(() => {
-						if (mode === 0) {
-							const nextSquare = square.nextElementSibling;
-							if (nextSquare) {
-								nextSquare.focus();
-								toggleSelected(square);
-							}
-						} else {
-							const parent = square.parentNode;
-							const children = parent.children;
+				switch(event.keyCode) {
+					// change input direction when \ is pressed
+					case 220:
+						event.preventDefault();
+						toggleMode();
+						break;
+					// go back on delete/backspace
+					case 8:
+						event.preventDefault();
+						square.value = null;
+						focusPrevious(square);
+						break;
+					// handle arrow keys
+					case 37:
+						event.preventDefault();
+						setMode(0);
+						focusPrevious(square);
+						break;
+					case 38:
+						event.preventDefault();
+						setMode(1);
+						focusPrevious(square);
+						break;
+					case 39:
+						event.preventDefault();
+						setMode(0);
+						focusNext(square);
+						break;
+					case 40:
+						event.preventDefault();
+						setMode(1);
+						focusNext(square);
+						break;
+				}
 
-							let childIndex = null;
-							for (let i = 0; i < children.length; i++) {
-								if (children[i] === square) {
-									childIndex = i;
-									break;
-								}
-							}
-							const nextRow = parent.nextElementSibling;
-							if (nextRow) {
-								const nextSquare = nextRow.children[childIndex];
-								nextSquare.focus();
-								toggleSelected(square);
-							}
-						}
-					}, 10);
+				if (event.key.match(/^[a-zA-Z]$/)) {
+					event.preventDefault();
+					square.value = event.key;
+
+					focusNext(square);
 				}
 			});
 
