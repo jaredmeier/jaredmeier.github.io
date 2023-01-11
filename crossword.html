@@ -123,7 +123,7 @@
 		}
 
 		function highlightCol(square) {
-			const childIdx = childIndex(square);
+			const childIdx = columnIndex(square);
 			rows.forEach((row) => {
 				const square = row.querySelectorAll('.square')[childIdx];
 				square.classList.add('highlighted');
@@ -134,10 +134,10 @@
 			squares.forEach((square) => square.classList.remove('highlighted'));
 		}
 
-		function childIndex(square) {
+		function columnIndex(square) {
 			const children = rowNode(square).querySelectorAll('.square');
 
-			let childIdx = null;
+			let childIdx;
 			for (let i = 0; i < children.length; i++) {
 				if (children[i] === square) {
 					childIdx = i;
@@ -147,10 +147,22 @@
 			return childIdx;
 		}
 
+		function rowIndex(square) {
+			const row = rowNode(square);
+			let rowIdx;
+			for (let i = 0; i < rows.length; i++) {
+				if (rows[i] === row) {
+					rowIdx = i;
+					break;
+				}
+			}
+			return rowIdx;
+		}
+
 		function focusNextOrPrev(square, prev) {
 			if (mode === 0) {
 				const rowSquares = rowNode(square).querySelectorAll('.square');
-				let idx = childIndex(square);
+				let idx = columnIndex(square);
 				let nextSquare;
 				while (!nextSquare || (nextSquare && nextSquare.classList.contains('blacked-out'))) {
 					idx = prev ? idx - 1 : idx + 1;
@@ -166,7 +178,7 @@
 				}
 			} else {
 				const row = rowNode(square);
-				const childIdx = childIndex(square);
+				const childIdx = columnIndex(square);
 				let currRow = row;
 				let nextRow;
 				let nextSquare;
@@ -192,6 +204,26 @@
 		function focusPrevious(square) {
 			focusNextOrPrev(square, true);
 		}
+
+		function toggleBlackedOut(square) {
+			square.classList.toggle('blacked-out');
+
+			if (square.classList.contains('blacked-out')) {
+				square.readOnly = true;
+			} else {
+				square.readOnly = false;
+			}
+		}
+
+		function toggleBlackSymmetricalSquares(square) {
+			const colIdx = columnIndex(square);
+			let rowIdx = rowIndex(square);
+			
+			const symSquare = rows[size - rowIdx - 1].querySelectorAll('.square')[size - colIdx - 1];
+
+			toggleBlackedOut(square);
+			toggleBlackedOut(symSquare);
+		}
 		
 		squares.forEach((square) => {
 			square.addEventListener('focus', (event) => {
@@ -200,12 +232,7 @@
 			});
 
 			square.addEventListener('dblclick', (event) => {
-				square.classList.toggle('blacked-out');
-				if (square.classList.contains('blacked-out')) {
-					square.readOnly = true;
-				} else {
-					square.readOnly = false;
-				}
+				toggleBlackSymmetricalSquares(square);
 
 				if (selected) {
 					selected.classList.remove('selected');
