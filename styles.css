@@ -189,3 +189,41 @@
   padding-top: 2px;
   font-size: 0.5rem;
 }
+
+.free-money-body {
+  background-color: #F8BDC4;
+  color: #F65BE3;
+}
+
+.free-money-container input {
+  background-color: #F497DA;
+  border-style: solid;
+  border-color: whitesmoke;
+  border-width: 1px;
+  text-transform: uppercase;
+  width: 200px;
+}
+
+.free-money-container input:focus{
+  outline: dashed 1px #DEF6CA;
+}
+
+.dollar-input-group {
+  position: relative;
+}
+
+.dollar-sign {
+  position: absolute;
+  left: 15px;
+  top: 7px;
+  font-size: 1.2rem;
+}
+
+.free-money-container h1 {
+  animation: 10s 0.5s ease-in-out infinite both running free-money;
+}
+
+@keyframes free-money {
+  0%   {transform: rotate(0turn);}
+  100% {transform: rotate(1turn);}
+}
