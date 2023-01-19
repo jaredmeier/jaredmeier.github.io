@@ -212,10 +212,16 @@
   position: relative;
 }
 
-.dollar-sign {
+.dollar-sign-min {
   position: absolute;
-  left: 15px;
-  top: 7px;
+  left: -30px;
+  top: -4px;
+  font-size: 1.2rem;
+}
+.dollar-sign-max {
+  position: absolute;
+  left: 203px;
+  top: -4px;
   font-size: 1.2rem;
 }
 
@@ -226,4 +232,32 @@
 @keyframes free-money {
   0%   {transform: rotate(0turn);}
   100% {transform: rotate(1turn);}
+}
+
+.code-error {
+  visibility: hidden;
+}
+
+.redeem-button {
+  font-weight: bold;
+  color: white;
+}
+
+.overlay-container {
+  position: absolute;
+  background-color:rgb(158, 42, 43);
+  display: none !important;
+  z-index: 999;
+  max-width: 100%;
+  text-align: justify;
+}
+
+.overlay-container .row {
+  max-width: 100%;
+}
+
+.overlay-container h1 {
+  font-size: 3rem;
+  word-wrap: break-word;
+  max-width: 100%;
 }

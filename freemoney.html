@@ -19,6 +19,14 @@
 </head>
 
 <body class="free-money-body">
+	<div class="container vh-100 vw-100 d-flex justify-content-center overlay-container">
+		<div class="row pt-5 mt-5">
+			<div class="col d-flex flex-column align-items-center">
+				<h1>CONGRATULATIONS FREE MONEY IS COMING</h1>
+				<h1>SCREENSHOT THIS PAGE AND TEXT TO GIFT SENDER TO RECEIVE MONEY</h1>
+			</div>
+		</div>
+	</div>
 	<div class="container vh-100 d-flex justify-content-center free-money-container">
 			<div class="row pt-4">
 				<div class="col d-flex flex-column align-items-center">
@@ -30,30 +38,42 @@
 					<div class="row align-content-center my-4 pt-4">
 						<div class="col d-flex flex-column align-items-center">
 							<label for="code">
-								<h4>–CODE–</h4>
+								<h4>CODE</h4>
 							</label>
-							<input type="text" id="code" class="text-center p-2 rounded-pill" maxlength="7"/>
-							<small>error here</small>
+							<input type="text" id="code" class="text-center p-2 rounded-pill code-input" maxlength="7"/>
+							<div class="code-error">
+								<small>error here</small>
+							</div>
 						</div>
 					</div>
 					<div class="row align-content-center my-4">
 						<div class="col d-flex flex-column align-items-center">
 							<label for="code">
-								<h4>–AMOUNT–</h4>
+								<h4 class="amount-label">$0</h4>
 							</label>
 							<div class="dollar-input-group">
-								<div class="dollar-sign">
-									$
+								<div class="dollar-sign-min">
+									$0
 								</div>
-								<input 
-									type="number"
-									id="amount" 
-									class="text-center p-2 rounded-pill"
-									placeholder="0"
+								<div class="dollar-sign-max">
+									$999
+								</div>
+								<input type="range"
+									class="form-control-range amount-input"
+									id="formControlRange"
 									min="0"
-									max="9999"
-								/>
+									max="999"
+								>
 							</div>
+						</div>
+					</div>
+					<div class="row align-content-center my-4 redeem-button-container">
+						<div class="col d-flex flex-column align-items-center">
+							<input 
+								type="submit"
+								value="REDEEM"
+								class="text-center p-2 rounded-pill redeem-button"
+							/>
 						</div>
 					</div>
 				</div>
@@ -61,18 +81,36 @@
 		</div>
 	</div>
 	<script>
-		// console.log('what')
-		// const amtInput = document.querySelector('#amount');
+		const amountLabel = document.querySelector(".amount-label");
+		const amountInput = document.querySelector(".amount-input");
+		const codeInput = document.querySelector(".code-input");
+		const redeemButton = document.querySelector(".redeem-button");
+		const redeemButtonContainer = document.querySelector(".redeem-button-container");
 
-		// amtInput.addEventListener('keydown', updateAmt);
+		amountInput.value = 0;
+		checkRedeemButton();
+		
+		amountInput.addEventListener("input", (e) => {
+			amountLabel.textContent = `$${e.target.value}`;
+			checkRedeemButton();
+		});
 
-		// function updateAmt(e) {
-		// 	e.preventDefault();
-		// 	if (e.key.match(/[0-9]+/g)) {
-		// 		e.target.value = e.key;
-		// 	}
-		// }
+		redeemButton.addEventListener("click", (e) => {
+			console.log(e);
+			if (codeInput.value === "AXI83F") {
+				
+			}
+		});
 
+
+		function checkRedeemButton() {
+			const val = amountInput.value;
+			if (val <= 0) {
+				redeemButtonContainer.style.visibility = "hidden";
+			} else {
+				redeemButtonContainer.style.visibility = "visible";
+			}
+		};
 	</script>
 </body>
 
