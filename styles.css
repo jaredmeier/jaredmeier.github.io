@@ -242,6 +242,10 @@
   font-weight: bold;
   color: white;
 }
+.redeem-button.disabled {
+  opacity: 50%;
+  cursor: inherit;
+}
 
 .overlay-container {
   position: absolute;
@@ -250,10 +254,22 @@
   z-index: 999;
   max-width: 100%;
   text-align: justify;
+  overflow: scroll;
+}
+
+.overlay-container.show {
+  display: inherit !important;
 }
 
 .overlay-container .row {
   max-width: 100%;
+  display: flex;
+  align-content: center;
+  flex-direction: column;
+}
+
+.overlay-container .col {
+  max-width: 300px;
 }
 
 .overlay-container h1 {
