@@ -238,6 +238,10 @@
   visibility: hidden;
 }
 
+.code-input {
+  width: 360px !important;
+}
+
 .redeem-button {
   font-weight: bold;
   color: white;
@@ -269,11 +273,19 @@
 }
 
 .overlay-container .col {
-  max-width: 300px;
+  max-width: 350px;
 }
 
 .overlay-container h1 {
   font-size: 3rem;
   word-wrap: break-word;
   max-width: 100%;
+}
+
+.try-button {
+  display: none !important;
+}
+
+.try-button.show {
+  display: inherit !important;
 }

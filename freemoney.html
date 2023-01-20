@@ -23,6 +23,9 @@
 		<div class="row mt-5">
 			<div class="col d-flex flex-column align-items-center results-text">
 			</div>
+			<div class="col d-flex flex-column align-items-center try-button pt-4">
+				<button>TRY AGAIN</button>
+			</div>
 		</div>
 	</div>
 	<div class="container vh-100 d-flex justify-content-center free-money-container">
@@ -38,10 +41,7 @@
 							<label for="code">
 								<h4>CODE</h4>
 							</label>
-							<input type="text" id="code" class="text-center p-2 rounded-pill code-input" maxlength="7"/>
-							<div class="code-error">
-								<small>error here</small>
-							</div>
+							<input type="text" id="code" class="text-center p-2 rounded-pill code-input" maxlength="35"/>
 						</div>
 					</div>
 					<div class="row align-content-center my-4">
@@ -87,6 +87,7 @@
 		const redeemButtonContainer = document.querySelector(".redeem-button-container");
 		const overlayContainer = document.querySelector(".overlay-container");
 		const resultsText = document.querySelector(".results-text");
+		const tryButton = document.querySelector(".try-button");
 
 		amountInput.value = 0;
 		checkRedeemButton();
@@ -100,30 +101,46 @@
 			checkRedeemButton();
 		});
 
-		const congratsText = '<h1>CONGRATULATIONS FREE MONEY IS COMING</h1><h1>SCREENSHOT THIS PAGE AND TEXT TO GIFT SENDER TO RECEIVE MONEY</h1>';
-		const wrongCodeText = '<h1>THAT IS WRONG CODE. REFRESH AND TRY AGAIN</h1>';
-		const tooMuchText = '<h1>THAT IS TOO MUCH MONEY. REFRESH AND TRY AGAIN</h1>';
-		const tooLittleText = '<h1>YOU CAN HAVE MORE MONEY THAN THAT. REFRESH AND TRY AGAIN</h1>';
-		const correctCode = 'abcd';
-		const correctAmount = 150;
+		tryButton.addEventListener("click", (e) => {
+			overlayContainer.classList.remove("show");
+		});
+
+		const congratsText = '<h1>CONGRATULATIONS FREE MONEY IS YOURS</h1><h1>SCREENSHOT THIS PAGE AND TEXT TO GIFT SENDER TO RECEIVE MONEY</h1>';
+		const wrongCodeText = '<h1>THAT IS WRONG CODE. DO TRY AGAIN</h1>';
+		const tooMuchText = '<h1>THAT IS TOO MUCH MONEY. DO TRY AGAIN</h1>';
+		const tooLittleText = '<h1>YOU CAN HAVE MORE MONEY THAN THAT. DO TRY AGAIN</h1>';
+		const correctCode = 'TPi9f6i*Hj90RH@0vR^%OqlZ804z^xd9'.toLowerCase();
+		const correctAmount = 155;
 
 		redeemButton.addEventListener("click", (e) => {
 			if (redeemButton.classList.contains("disabled")) return;
 			const amount = amountInput.value;
 
+			let wrong;
 			if (codeInput.value.toLowerCase() === correctCode) {
-				if (amount === correctAmount) {
+				if (amount == correctAmount) {
 					resultsText.innerHTML = congratsText;
 				} else if (amount > correctAmount) {
 					resultsText.innerHTML = tooMuchText;
-				} else resultsText.innerHTML = tooLittleText;
+					wrong = true;
+				} else { 
+					resultsText.innerHTML = tooLittleText;
+					wrong = true;
+				}
 			} else {
 				resultsText.innerHTML = wrongCodeText;
+				wrong = true;
 			}
+
+			if (wrong) {
+				tryButton.classList.add("show");
+			} else {
+				tryButton.classList.remove("show");
+			}
+
 			overlayContainer.classList.add("show");
 		});
-
-
+		
 		function checkRedeemButton() {
 			const val = amountInput.value;
 			const code = codeInput.value;
