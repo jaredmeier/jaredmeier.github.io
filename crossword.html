@@ -15,18 +15,30 @@
 	<link href="https://fonts.googleapis.com/css2?family=Tiro+Gurmukhi&display=swap" rel="stylesheet">
 
 	<link rel="stylesheet" type="text/css" href="styles.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src="https://kit.fontawesome.com/e93199a89e.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
+	<div class="d-flex justify-content-center">
+		<h3 id="counter">5</h3>
+	</div>
 	<div class="container-fluid grid" tabindex="0">
 	</div>
-	<div class="button-container py-3">
+	<!-- <div class="button-container py-3">
 		<button class="arrow-button">
-			<i class="fa fa-arrow-up"></i>
+			<i class="fa-solid fa-arrow-up"></i>
 		</button>		
+	</div> -->
+	<div class="button-container py-3">
+		<button class="save-button px-2 mx-2">
+			<i class="fa-solid fa-floppy-disk"></i>
+		</button>
+		<button class="load-button px-2 mx-2">
+			<i class="fa-solid fa-upload"></i>
+		</button>
+		<input type="file" accept=".csv" id="csv_upload" />
 	</div>
-	
+
 
 	<script>
 		let selected = null;
@@ -35,29 +47,51 @@
 		let mode = 0;
 
 		const button = document.querySelector('.arrow-button');
-		button.addEventListener('click', (_event) => {
+		button && button.addEventListener('click', (_event) => {
 			toggleMode();
 		});
 
+		const saveButton = document.querySelector('.save-button');
+		saveButton.addEventListener('click', (_event) => {
+			exportGrid();
+		});
+
+		const loadButton = document.querySelector('.load-button');
+		loadButton.disabled = true;
+		loadButton.addEventListener('click', (event) => {
+			loadGrid(event);
+		});
+		const fileBrowser = document.querySelector('#csv_upload');
+		fileBrowser.value = '';
+		fileBrowser.addEventListener('change', (event) => {
+			if (fileBrowser.files.length == 1) {
+				loadButton.disabled = false;
+			} else {
+				loadButton.disabled = true;
+			}
+		});
+
+		// create row squares, labels, and inputs
 		const gridContainer = document.querySelector('.grid');
 		const size = 15;
-
 		let counter = 1;
+
 		for (let i = 0; i < size; i++) {
 			const row = document.createElement('div');
 			row.classList.add('row');
 			gridContainer.appendChild(row);
-			
+
 			for (let j = 0; j < size; j++) {
 				const squareContainer = document.createElement('div');
 				squareContainer.classList.add('square-container', 'col');
 				row.appendChild(squareContainer);
 
+				// create label
 				const div = document.createElement('div');
 				div.classList.add('square-number');
-				div.innerHTML = counter;
 				squareContainer.appendChild(div);
 
+				// create input for square
 				const square = document.createElement('input');
 				square.classList.add('square', 'col-sm-1');
 				square.setAttribute('type', 'text');
@@ -67,9 +101,76 @@
 				counter++;
 			}
 		}
-		
+
 		const rows = document.querySelectorAll('.row');
 		const squares = document.querySelectorAll('.square');
+
+		const squaresArray = Array.from(squares);
+		const squaresAsGrid = [];
+		while (squaresArray.length) squaresAsGrid.push(squaresArray.splice(0, size));
+
+		renumber();
+
+		function exportGrid() {
+			console.log('Exporting...');
+			const allRows = Array.from(rows);
+
+			const allRowData = allRows.map(row => {
+				const rowData = Array.from(row.children);
+				return rowData.map(squareContainer => {
+					const { value, classList } = squareContainer.querySelector('.square');
+
+					if (value) return value;
+
+					if (classList.contains('blacked-out')) {
+						return '|||';
+					}
+				}).join(',')
+			}).join('\n');
+
+			downloadCSV(allRowData, allRows.length);
+		}
+
+		function loadGrid(e) {
+			console.log('Loading...');
+
+			const file = document.querySelector('#csv_upload').files[0];
+			let reader = new FileReader();
+			function parseResults() {
+				// parse, exclude header row
+				const rows = reader.result.split('\n').slice(1);
+
+				// TODO: rebuild grid here?
+				const inputs = document.querySelectorAll('.square');
+				inputs.forEach((square) => square.classList.remove('blacked-out'));
+
+				// join all rows, split into ordered array of values
+				// which maps to squares in order
+				const allData = rows.join().split(',');
+				allData.forEach((value, idx) => {
+					square = squares[idx];
+					if (value === '|||') {
+						toggleBlackedOut(square);
+					} else {
+						square.value = value;
+					}
+				});
+			}
+			reader.onload = parseResults;
+			reader.readAsText(file);
+		};
+
+		function downloadCSV(data, rowCount) {
+			const csvHeader = Array.from({ length: rowCount }, (_, idx) => idx + 1).join(',') + '\n';
+
+			const hiddenElement = document.createElement('a');
+
+			hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csvHeader + data);
+			hiddenElement.target = '_blank';
+			const dateStr = new Date().toLocaleString('default', { month: 'short', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });;
+			hiddenElement.download = `Crossword ${dateStr}.csv`;
+			hiddenElement.click();
+		}
 
 		function toggleSelected(square) {
 			if (selected) {
@@ -210,8 +311,21 @@
 			let counter = 1;
 			squareContainers.forEach((div) => {
 				const square = div.querySelector('.square');
+
+				const colIdx = columnIndex(square);
+				const rowIdx = rowIndex(square);
+
+				// if there's an empty square to the left or above, then it's the start of answer
+				const leftNeighbor = rowIdx > 0 ? squaresAsGrid[rowIdx - 1][colIdx] : null;
+				const topNeighbor = colIdx > 0 ? squaresAsGrid[rowIdx][colIdx - 1] : null;
+
+				const isBorderSquare = !leftNeighbor || !topNeighbor ||
+					leftNeighbor.classList.contains('blacked-out') || 
+					topNeighbor.classList.contains('blacked-out');
+
 				const numDiv = div.querySelector('.square-number');
-				if (!square.classList.contains('blacked-out')) {
+
+				if (isBorderSquare && !square.classList.contains('blacked-out')) {
 					numDiv.innerHTML = counter;
 					counter++;
 				} else {
@@ -235,13 +349,13 @@
 		function toggleBlackSymmetricalSquares(square) {
 			const colIdx = columnIndex(square);
 			let rowIdx = rowIndex(square);
-			
+
 			const symSquare = rows[size - rowIdx - 1].querySelectorAll('.square')[size - colIdx - 1];
 
 			toggleBlackedOut(square);
 			toggleBlackedOut(symSquare);
 		}
-		
+
 		squares.forEach((square) => {
 			square.addEventListener('focus', (event) => {
 				toggleSelected(square);
@@ -258,18 +372,20 @@
 			});
 
 			square.addEventListener('keydown', (event) => {
-				switch(event.keyCode) {
+				switch (event.keyCode) {
 					// change input direction when \ is pressed
 					case 220:
 						event.preventDefault();
 						toggleMode();
 						break;
+
 					// go back on delete/backspace
 					case 8:
 						event.preventDefault();
 						square.value = null;
 						focusPrevious(square);
 						break;
+
 					// handle arrow keys
 					case 37:
 						event.preventDefault();
@@ -300,7 +416,6 @@
 					focusNext(square);
 				}
 			});
-
 		});
 	</script>
 </body>

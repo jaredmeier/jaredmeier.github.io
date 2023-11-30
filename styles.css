@@ -289,3 +289,9 @@
 .try-button.show {
   display: inherit !important;
 }
+
+.counter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
