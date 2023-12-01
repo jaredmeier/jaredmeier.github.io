@@ -296,3 +296,8 @@
 .fa-copy {
   cursor: pointer;
 }
+
+.fa-spinner {
+  align-self: baseline;
+  margin-top: 4rem;
+}

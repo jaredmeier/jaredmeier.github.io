@@ -27,7 +27,7 @@
 			<div class="col-4">
 				<div class="row mt-5">
 					<div class="d-flex justify-content-center align-items-center mt-5">
-						<h3 class="word-display">WORD</h3>
+						<h3 class="word-display">~</h3>
 					</div>
 				</div>
 				<div class="row py-1">
@@ -35,10 +35,10 @@
 						<i class="fa-solid fa-copy mb-1 px-3" onclick="copyToClipboard()"></i>
 					</div>
 				</div>
-				<div class="row mt-5">
-					<div class="d-flex justify-content-center align-items-center">
-						<i class="fa-solid fa-spinner fa-spin"></i>
-						<h4 class="word-suggestions">suggestion</h4>
+				<div class="row mt-5 h-100">
+					<div class="d-flex justify-content-center">
+						<i class="fa-solid fa-spinner fa-spin h2"></i>
+						<h4 class="word-suggestions"></h4>
 					</div>
 				</div>
 			</div>
@@ -69,17 +69,19 @@
 
 		const wordDisplay = document.querySelector('.word-display');
 		const wordSuggestions = document.querySelector('.word-suggestions');
+		const suggestionLoader = document.querySelector('.fa-spinner');
+		hideLoader();
 
 		const button = document.querySelector('.arrow-button');
 		button && button.addEventListener('click', (_event) => {
 			toggleMode();
 		});
 
+		// save and load functionality
 		const saveButton = document.querySelector('.save-button');
 		saveButton.addEventListener('click', (_event) => {
 			exportGrid();
 		});
-
 		const loadButton = document.querySelector('.load-button');
 		loadButton.disabled = true;
 		loadButton.addEventListener('click', (event) => {
@@ -94,6 +96,9 @@
 				loadButton.disabled = true;
 			}
 		});
+
+		// cache API lookups
+		const suggestionCache = {};
 
 		// create row squares, labels, and inputs
 		const gridContainer = document.querySelector('.grid');
@@ -197,23 +202,84 @@
 		}
 
 		function copyToClipboard() {
-			const word = wordDisplay.innerHTML.replace(/\s+/g, '');
-			// remove the count in parentheses
-			const justTheWord = word.slice(0, word.indexOf('('));
-			navigator.clipboard.writeText(justTheWord);
+			navigator.clipboard.writeText(getWordFromElement());
 		}
 
-		function fetchWordSuggestions(_word) {
-			fetch('https://api.datamuse.com/words?sp=t??k&max=15').then((response) => {
-				// The API call was successful!
-				console.log('success!');
-				response.json().then(data => console.log(data.map((obj) => obj.word)));
-			}).catch((err) => {
-				// There was an error
-				console.warn('Something went wrong.', err);
+		function getWordFromElement() {
+			const word = wordDisplay.innerHTML.replace(/\s+/g, '');
+			// remove the count in parentheses
+			return word.slice(0, word.indexOf('('));
+		}
+
+		function fetchWordSuggestions(word) {
+			if (word.indexOf('?') === -1) {
+				hideLoader();
+				return;
+			}
+
+			const cached = suggestionCache[word];
+			if (cached) {
+				hideLoader();
+				setWordSuggestions(cached);
+				return;
+			}
+
+			fetch(`https://api.datamuse.com/words?sp=${word}&max=15`)
+				.then((response) => {
+					console.log('Received API response from datamuse');
+					hideLoader();
+					response.json().then(data => {
+						const words = data.map(obj => obj.word);
+						setWordSuggestions(words);
+						suggestionCache[word] = words;
+					});
+				}).catch((error) => {
+					console.warn('Something went wrong.', error);
+				});
+		}
+
+		function hideLoader() {
+			suggestionLoader.style.display = 'none';
+		}
+
+		function setWordSuggestions(words) {
+			words.forEach((word) => {
+				const item = document.createElement('div');
+				item.classList.add('row');
+				item.innerHTML = word;
+				wordSuggestions.appendChild(item);
 			});
 		}
-		
+
+		function debounce(callback, timeout = 2000) {
+			let timer;
+			return (...args) => {
+				window.clearTimeout(timer);
+				timer = window.setTimeout(() => {
+					callback.apply(null, args);
+				}, timeout);
+			};
+		}
+
+		function setSuggestionsLoading() {
+			wordSuggestions.innerHTML = '';
+			const word = getWordFromElement();
+			if (word.indexOf('?') !== -1) suggestionLoader.style.display = 'block';
+		}
+
+		const processSuggestions = debounce(() => fetchWordSuggestions(getWordFromElement()));
+
+		function loadSuggestions() {
+			setSuggestionsLoading();
+			const cached = suggestionCache[getWordFromElement()];
+			if (cached) {
+				hideLoader();
+				setWordSuggestions(cached);
+				return;
+			}
+			processSuggestions();
+		}
+
 		function toggleSelected(square) {
 			if (selected) {
 				selected.classList.remove('selected');
@@ -305,7 +371,7 @@
 			return rowIdx;
 		}
 
-		function getCurrentWord(square) {
+		function getCurrentWordAsArray(square) {
 			const rowIdx = rowIndex(square);
 			const colIdx = columnIndex(square);
 
@@ -363,7 +429,7 @@
 				if (startIdx === endIdx) return [square.value];
 
 				const wordSquares = [];
-				for(let i = startIdx; i <= endIdx; i++) {
+				for (let i = startIdx; i <= endIdx; i++) {
 					wordSquares.push(squaresAsGrid[i][colIdx]);
 				}
 
@@ -414,7 +480,7 @@
 		}
 
 		function setWordForSquare(square) {
-			const word = getCurrentWord(square);
+			const word = getCurrentWordAsArray(square);
 			wordDisplay.innerHTML = word.map((letter) => letter || '?').join(' ') + ` (${word.length})`;
 		}
 
@@ -481,6 +547,9 @@
 				toggleSelected(square);
 				highlightDirection(square);
 				setWordForSquare(square);
+				// setSuggestionsLoading();
+				// processSuggestions();
+				loadSuggestions();
 			});
 
 			square.addEventListener('click', (event) => {
