@@ -245,7 +245,7 @@
 		function setWordSuggestions(words) {
 			words.forEach((word) => {
 				const item = document.createElement('div');
-				item.classList.add('row pb-2');
+				item.classList.add('row', 'pb-2');
 				item.innerHTML = word;
 				wordSuggestions.appendChild(item);
 			});
