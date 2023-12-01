@@ -540,7 +540,7 @@
 			const symSquare = rows[size - rowIdx - 1].querySelectorAll('.square')[size - colIdx - 1];
 
 			toggleBlackedOut(square);
-			toggleBlackedOut(symSquare);
+			if (square !== symSquare) toggleBlackedOut(symSquare);
 		}
 
 		squares.forEach((square) => {
