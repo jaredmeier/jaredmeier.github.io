@@ -19,10 +19,30 @@
 </head>
 
 <body>
-	<div class="d-flex justify-content-center">
-		<h3 id="counter">5</h3>
-	</div>
-	<div class="container-fluid grid" tabindex="0">
+	<div class="container">
+		<div class="row mt-3">
+			<div class="col-8">
+				<div class="container-fluid grid" tabindex="0"></div>
+			</div>
+			<div class="col-4">
+				<div class="row mt-5">
+					<div class="d-flex justify-content-center align-items-center mt-5">
+						<h3 class="word-display">WORD</h3>
+					</div>
+				</div>
+				<div class="row py-1">
+					<div class="d-flex justify-content-center">
+						<i class="fa-solid fa-copy mb-1 px-3" onclick="copyToClipboard()"></i>
+					</div>
+				</div>
+				<div class="row mt-5">
+					<div class="d-flex justify-content-center align-items-center">
+						<i class="fa-solid fa-spinner fa-spin"></i>
+						<h4 class="word-suggestions">suggestion</h4>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 	<!-- <div class="button-container py-3">
 		<button class="arrow-button">
@@ -41,10 +61,14 @@
 
 
 	<script>
+		// TODO: Fetch word suggestions and display in list
 		let selected = null;
 
 		// horizontal auto-focus 0; vertical 1
 		let mode = 0;
+
+		const wordDisplay = document.querySelector('.word-display');
+		const wordSuggestions = document.querySelector('.word-suggestions');
 
 		const button = document.querySelector('.arrow-button');
 		button && button.addEventListener('click', (_event) => {
@@ -102,7 +126,7 @@
 			}
 		}
 
-		const rows = document.querySelectorAll('.row');
+		const rows = document.querySelectorAll('.grid > .row');
 		const squares = document.querySelectorAll('.square');
 
 		const squaresArray = Array.from(squares);
@@ -172,6 +196,24 @@
 			hiddenElement.click();
 		}
 
+		function copyToClipboard() {
+			const word = wordDisplay.innerHTML.replace(/\s+/g, '');
+			// remove the count in parentheses
+			const justTheWord = word.slice(0, word.indexOf('('));
+			navigator.clipboard.writeText(justTheWord);
+		}
+
+		function fetchWordSuggestions(_word) {
+			fetch('https://api.datamuse.com/words?sp=t??k&max=15').then((response) => {
+				// The API call was successful!
+				console.log('success!');
+				response.json().then(data => console.log(data.map((obj) => obj.word)));
+			}).catch((err) => {
+				// There was an error
+				console.warn('Something went wrong.', err);
+			});
+		}
+		
 		function toggleSelected(square) {
 			if (selected) {
 				selected.classList.remove('selected');
@@ -187,20 +229,23 @@
 
 		function toggleMode() {
 			if (mode === 0) {
-				mode = 1;
+				setMode(1);
 			} else {
-				mode = 0;
+				setMode(0);
 			}
-			button.classList.toggle('down');
-			if (selected) highlightDirection(selected);
 		}
 
 		function setMode(val) {
 			mode = val;
-			if (mode === 1 && !button.classList.contains('down')) button.classList.add('down');
-			if (mode === 0 && button.classList.contains('down')) button.classList.remove('down');
+			if (button) {
+				if (mode === 1 && !button.classList.contains('down')) button.classList.add('down');
+				if (mode === 0 && button.classList.contains('down')) button.classList.remove('down');
+			}
 
-			if (selected) highlightDirection(selected);
+			if (selected) {
+				highlightDirection(selected);
+				setWordForSquare(selected);
+			}
 		}
 
 		function rowNode(square) {
@@ -260,12 +305,82 @@
 			return rowIdx;
 		}
 
+		function getCurrentWord(square) {
+			const rowIdx = rowIndex(square);
+			const colIdx = columnIndex(square);
+
+			if (mode === 0) {
+				let startIdx = colIdx;
+				let squareToLeft = true;
+
+				while (startIdx > 0 && squareToLeft) {
+					const leftSquare = squaresAsGrid[rowIdx][startIdx - 1];
+					if (leftSquare && !isBlackedOut(leftSquare)) {
+						startIdx--;
+					} else {
+						squareToLeft = false;
+					}
+				}
+
+				let endIdx = colIdx;
+				let squareToRight = true;
+
+				while (endIdx < (size - 1) && squareToRight) {
+					const rightSquare = squaresAsGrid[rowIdx][endIdx + 1];
+					if (rightSquare && !isBlackedOut(rightSquare)) {
+						endIdx++;
+					} else {
+						squareToRight = false;
+					}
+				}
+
+				return squaresAsGrid[rowIdx].slice(startIdx, endIdx + 1).map((sq) => sq.value);
+			} else {
+				let startIdx = rowIdx;
+				let squareAbove = true;
+
+				while (startIdx > 0 && squareAbove) {
+					const aboveSquare = squaresAsGrid[startIdx - 1][colIdx];
+					if (aboveSquare && !isBlackedOut(aboveSquare)) {
+						startIdx--;
+					} else {
+						squareAbove = false;
+					}
+				}
+
+				let endIdx = rowIdx;
+				let squareBelow = true;
+
+				while (endIdx < (size - 1) && squareBelow) {
+					const belowSquare = squaresAsGrid[endIdx + 1][colIdx];
+					if (belowSquare && !isBlackedOut(belowSquare)) {
+						endIdx++;
+					} else {
+						squareBelow = false;
+					}
+				}
+
+				if (startIdx === endIdx) return [square.value];
+
+				const wordSquares = [];
+				for(let i = startIdx; i <= endIdx; i++) {
+					wordSquares.push(squaresAsGrid[i][colIdx]);
+				}
+
+				return wordSquares.map((sq) => sq.value);
+			}
+		}
+
+		function isBlackedOut(square) {
+			return square.classList.contains('blacked-out');
+		}
+
 		function focusNextOrPrev(square, prev) {
 			if (mode === 0) {
 				const rowSquares = rowNode(square).querySelectorAll('.square');
 				let idx = columnIndex(square);
 				let nextSquare;
-				while (!nextSquare || (nextSquare && nextSquare.classList.contains('blacked-out'))) {
+				while (!nextSquare || isBlackedOut(square)) {
 					idx = prev ? idx - 1 : idx + 1;
 
 					if (idx < 0) break;
@@ -283,7 +398,7 @@
 				let currRow = row;
 				let nextRow;
 				let nextSquare;
-				while (!nextSquare || (nextSquare && nextSquare.classList.contains('blacked-out'))) {
+				while (!nextSquare || isBlackedOut(square)) {
 					nextRow = prev ? currRow.previousElementSibling : currRow.nextElementSibling;
 
 					if (!nextRow) break;
@@ -298,12 +413,19 @@
 			}
 		}
 
+		function setWordForSquare(square) {
+			const word = getCurrentWord(square);
+			wordDisplay.innerHTML = word.map((letter) => letter || '?').join(' ') + ` (${word.length})`;
+		}
+
 		function focusNext(square) {
 			focusNextOrPrev(square, false);
+			setWordForSquare(square);
 		}
 
 		function focusPrevious(square) {
 			focusNextOrPrev(square, true);
+			setWordForSquare(square)
 		}
 
 		function renumber() {
@@ -316,16 +438,14 @@
 				const rowIdx = rowIndex(square);
 
 				// if there's an empty square to the left or above, then it's the start of answer
-				const leftNeighbor = rowIdx > 0 ? squaresAsGrid[rowIdx - 1][colIdx] : null;
-				const topNeighbor = colIdx > 0 ? squaresAsGrid[rowIdx][colIdx - 1] : null;
+				const topNeighbor = rowIdx > 0 ? squaresAsGrid[rowIdx - 1][colIdx] : null;
+				const leftNeighbor = colIdx > 0 ? squaresAsGrid[rowIdx][colIdx - 1] : null;
 
-				const isBorderSquare = !leftNeighbor || !topNeighbor ||
-					leftNeighbor.classList.contains('blacked-out') || 
-					topNeighbor.classList.contains('blacked-out');
+				const isBorderSquare = !leftNeighbor || !topNeighbor || isBlackedOut(leftNeighbor) || isBlackedOut(topNeighbor);
 
 				const numDiv = div.querySelector('.square-number');
 
-				if (isBorderSquare && !square.classList.contains('blacked-out')) {
+				if (isBorderSquare && !isBlackedOut(square)) {
 					numDiv.innerHTML = counter;
 					counter++;
 				} else {
@@ -337,7 +457,7 @@
 		function toggleBlackedOut(square) {
 			square.classList.toggle('blacked-out');
 
-			if (square.classList.contains('blacked-out')) {
+			if (isBlackedOut(square)) {
 				square.readOnly = true;
 			} else {
 				square.readOnly = false;
@@ -360,6 +480,13 @@
 			square.addEventListener('focus', (event) => {
 				toggleSelected(square);
 				highlightDirection(square);
+				setWordForSquare(square);
+			});
+
+			square.addEventListener('click', (event) => {
+				if (event.ctrlKey || event.metaKey) {
+					toggleMode();
+				}
 			});
 
 			square.addEventListener('dblclick', (event) => {
