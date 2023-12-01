@@ -21,10 +21,10 @@
 <body>
 	<div class="container">
 		<div class="row mt-3">
-			<div class="col-8">
+			<div class="col-xl-8 col-md-10 px-0">
 				<div class="container-fluid grid" tabindex="0"></div>
 			</div>
-			<div class="col-4">
+			<div class="col-xl-4 col-md-2">
 				<div class="row mt-5">
 					<div class="d-flex justify-content-center align-items-center mt-5">
 						<h3 class="word-display">~</h3>
@@ -245,7 +245,7 @@
 		function setWordSuggestions(words) {
 			words.forEach((word) => {
 				const item = document.createElement('div');
-				item.classList.add('row');
+				item.classList.add('row pb-2');
 				item.innerHTML = word;
 				wordSuggestions.appendChild(item);
 			});
@@ -311,6 +311,7 @@
 			if (selected) {
 				highlightDirection(selected);
 				setWordForSquare(selected);
+				loadSuggestions();
 			}
 		}
 
@@ -547,8 +548,6 @@
 				toggleSelected(square);
 				highlightDirection(square);
 				setWordForSquare(square);
-				// setSuggestionsLoading();
-				// processSuggestions();
 				loadSuggestions();
 			});
 
