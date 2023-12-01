@@ -301,3 +301,11 @@
   align-self: baseline;
   margin-top: 4rem;
 }
+
+.square {
+  opacity: 100%;
+}
+
+.square.ghosted {
+  opacity: 50%;
+}

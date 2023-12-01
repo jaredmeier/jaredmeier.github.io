@@ -206,6 +206,7 @@
 		}
 
 		function getWordFromElement() {
+			// remove spaces
 			const word = wordDisplay.innerHTML.replace(/\s+/g, '');
 			// remove the count in parentheses
 			return word.slice(0, word.indexOf('('));
@@ -247,7 +248,71 @@
 				const item = document.createElement('div');
 				item.classList.add('row', 'pb-1');
 				item.innerHTML = word;
+				item.addEventListener('mouseover', showGhostWord);
+				item.addEventListener('mouseout', removeGhostWord);
 				wordSuggestions.appendChild(item);
+			});
+		}
+
+		function removeGhostWord() {
+			document.querySelectorAll('.ghosted').forEach(sq => {
+				sq.value = '';
+				sq.classList.remove('ghosted');
+			});
+		}
+
+		function showGhostWord(event) {
+			if (!selected) return;
+
+			const ghostWord = event.target.innerHTML.replace(/\s+/g, '').split('');
+			const currentWord = getWordFromElement().toLocaleLowerCase().split('');
+
+			const rowIdx = rowIndex(selected);
+			const colIdx = columnIndex(selected);
+
+			let startIdx;
+
+			// TODO: refactor with other areas where it finds index of first letter in word!
+			if (mode === 0) {
+				startIdx = colIdx;
+				let squareToLeft = true;
+
+				while (startIdx > 0 && squareToLeft) {
+					const leftSquare = squaresAsGrid[rowIdx][startIdx - 1];
+					if (leftSquare && !isBlackedOut(leftSquare)) {
+						startIdx--;
+					} else {
+						squareToLeft = false;
+					}
+				}
+			} else {
+				startIdx = rowIdx;
+				let squareAbove = true;
+
+				while (startIdx > 0 && squareAbove) {
+					const aboveSquare = squaresAsGrid[startIdx - 1][colIdx];
+					if (aboveSquare && !isBlackedOut(aboveSquare)) {
+						startIdx--;
+					} else {
+						squareAbove = false;
+					}
+				}
+			}
+
+			currentWord.forEach((letter, idx) => {
+				if (letter === '?') {
+					const ghostLetter = ghostWord[idx];
+					if (!ghostLetter) return;
+
+					let ghostSquare;
+					if (mode === 0) {
+						ghostSquare = squaresAsGrid[rowIdx][startIdx + idx];
+					} else {
+						ghostSquare = squaresAsGrid[startIdx + idx][colIdx];
+					}
+					ghostSquare.classList.add('ghosted');
+					ghostSquare.value = ghostLetter;
+				}
 			});
 		}
 
