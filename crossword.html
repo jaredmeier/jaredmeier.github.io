@@ -35,7 +35,7 @@
 						<i class="fa-solid fa-copy mb-1 px-3" onclick="copyToClipboard()"></i>
 					</div>
 				</div>
-				<div class="row mt-5 h-100">
+				<div class="row mt-3 h-100">
 					<div class="d-flex justify-content-center">
 						<i class="fa-solid fa-spinner fa-spin h2"></i>
 						<h4 class="word-suggestions"></h4>
@@ -245,7 +245,7 @@
 		function setWordSuggestions(words) {
 			words.forEach((word) => {
 				const item = document.createElement('div');
-				item.classList.add('row', 'pb-2');
+				item.classList.add('row', 'pb-1');
 				item.innerHTML = word;
 				wordSuggestions.appendChild(item);
 			});
