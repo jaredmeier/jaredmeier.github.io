@@ -8,4 +8,5 @@ body {
     background-image: url("./flappybirdbg.png");
     background-size: cover;
     resize: both;
+    touch-action: manipulation;
 }

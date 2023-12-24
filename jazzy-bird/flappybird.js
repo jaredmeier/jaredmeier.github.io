@@ -5,7 +5,8 @@ let boardWidth = 360;
 let boardHeight = 640;
 let context;
 
-const scale = 0.9 * (innerHeight / boardHeight);
+const scale = Math.round(0.9 * (innerHeight / boardHeight) * 10) / 10;
+const scoreBoard = localStorage.getItem('high-scores');
 
 //bird
 let birdHeight = 50;
@@ -64,7 +65,7 @@ window.onload = function() {
 
     requestAnimationFrame(update);
     setInterval(placePipes, 1500); //every 1.5 seconds
-    document.addEventListener("keydown", moveBird);
+    document.addEventListener("keydown", handleKeyPress);
     document.addEventListener("touchstart", moveBird);
 }
 
@@ -84,7 +85,7 @@ function update() {
     context.drawImage(birdImg, bird.x, bird.y, bird.width * 1.2, bird.height * 1.2);
 
     if (bird.y > board.height) {
-        gameOver = true;
+        setGameOver();
     }
 
     //pipes
@@ -99,7 +100,7 @@ function update() {
         }
 
         if (detectCollision(bird, pipe)) {
-            gameOver = true;
+            setGameOver();
         }
     }
 
@@ -116,6 +117,11 @@ function update() {
     if (gameOver) {
         context.fillText("GAME OVER", 5, 90);
     }
+}
+
+function setGameOver() {
+    gameOver = true;
+    localStorage.setItem('high-scores', score);
 }
 
 function placePipes() {
@@ -150,14 +156,17 @@ function placePipes() {
     pipeArray.push(bottomPipe);
 }
 
+function handleKeyPress(e) {
+    if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyX") {
+        moveBird(e);
+    }
+}
+
 function moveBird(e) {
     e.preventDefault();
     if (showTitleScreen) {
         showTitleScreen = false;
     }
-
-    // controlled input
-    // if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyX")
     
     //jump
     velocityY = -6;
