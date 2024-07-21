@@ -40,12 +40,11 @@
     canvas.width = rect.width;
     canvas.height = rect.height;
 
-    const canvasRadius = canvas.height / 2.5;
-
-    context.lineWidth = 5;
-    context.strokeStyle = "black";
+    const canvasRadius = Math.min(canvas.height, canvas.width) / 2.5;
     
     const clockRadius = canvasRadius * 0.9;
+    context.lineWidth = clockRadius * 0.01;
+    context.strokeStyle = "black";
     const fullCircleAngle = 2 * Math.PI;
     drawClock();
 
