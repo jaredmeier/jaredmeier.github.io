@@ -1,0 +1,171 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>clock jar</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta property="og:title" content="clock jar">
+	<meta property="og:description" content="clock jar">
+	<link rel="icon" href="./images/jared-meier-cropped.png" />
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+		crossorigin="anonymous"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Tiro+Gurmukhi&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+
+<body>
+	<div class="container-fluid">
+		<div class="container">
+			<div class="row justify-content-center align-content-center" style="height: 100vh;">
+				<div class="col-12">
+					<div class="row justify-content-center" style="height: 100vh;">
+            <canvas id="clock-canvas"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+    const canvas = document.getElementById("clock-canvas");
+    const context = canvas.getContext("2d");
+    const rect = canvas.parentNode.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+
+    const canvasRadius = canvas.height / 2.5;
+
+    context.lineWidth = 5;
+    context.strokeStyle = "black";
+    
+    const clockRadius = canvasRadius * 0.9;
+    const fullCircleAngle = 2 * Math.PI;
+    drawClock();
+
+    function setCenterTransform() {
+      context.resetTransform();
+      context.translate(canvas.width / 2, canvas.height / 2);
+    }
+
+    function drawClock() {
+      setCenterTransform();
+      drawFace();
+
+      drawHand();
+
+      drawMonths();
+    }
+
+    function drawRadialGradient(innerColor, outerColor, startAngle) {
+      const gradient = context.createRadialGradient(0, 0, 30, 0, 0, clockRadius);
+      gradient.addColorStop(0, innerColor);
+      gradient.addColorStop(0.9, outerColor);
+      context.fillStyle = gradient;
+
+      context.beginPath();
+      context.rotate(-startAngle - 0.1);
+      context.fillRect(0, 0, clockRadius, clockRadius);
+
+      setCenterTransform();
+    }
+
+    function drawFace() {
+      // summer
+      drawRadialGradient("#F08080", "#FFE4E1", getAngleOffset(-0.5));
+      // spring
+      drawRadialGradient("#90EE90", "#FFFFE0", getAngleOffset(-3.5));
+      // winter
+      drawRadialGradient("#B0C4DE", "#F0F8FF", getAngleOffset(-6.5));
+      // fall
+      drawRadialGradient("#FF8C00", "#FFDAB9", getAngleOffset(-9.5));
+
+      // face
+      context.beginPath();
+      context.arc(0, 0, clockRadius, 0, fullCircleAngle);
+      context.stroke();
+
+
+      // inner circle
+      context.beginPath();
+      context.arc(0, 0, clockRadius / 25, 0 , fullCircleAngle);
+      context.fillStyle = "black";
+      context.fill();
+    }
+
+    function drawHand() {
+      const date = new Date();
+      const month = date.getMonth();
+      const day = date.getDate();
+
+      const angle = getAngleOffset(month + (day / 32));
+      
+      drawLineAtAngle(clockRadius *  1.2, clockRadius * 0.01, -angle);
+    }
+
+    function drawLineAtAngle(length, width, angle, color = "black") {
+      context.lineWidth = width;
+      context.strokeStyle = color;
+
+      context.beginPath();
+      context.moveTo(0,0);
+
+      context.rotate(angle);
+      context.lineTo(0, -length);
+      context.stroke();
+
+      setCenterTransform();
+    }
+
+    function getAngleOffset(month) {
+      return (month + 6) * Math.PI / 6;
+    }
+
+    function drawMonths() {
+      context.font = clockRadius * 0.04 + "px Tiro Gurmukhi";
+      context.textBaseline = "middle";
+
+      const months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ];
+
+      for(let num = 1; num < 13; num++) {
+        // get angle offset
+        const angle = getAngleOffset(num - 0.5);
+        
+        // move to outer circle
+        context.rotate(-angle);
+        context.translate(0, -clockRadius * 0.85);
+
+        // rotate back to level
+        context.textAlign = "center";
+        context.rotate(angle);
+        context.fillText(months[num - 1].toLowerCase(), 0, 0);
+
+        setCenterTransform();
+
+        const dividerAngle = getAngleOffset(num);
+        drawLineAtAngle(clockRadius, clockRadius * 0.001, -dividerAngle, "A9A9A9");
+      }
+    }
+  </script>
+</body>
+
+</html>
