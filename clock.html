@@ -21,8 +21,8 @@
 </head>
 
 <body>
-	<div class="container-fluid">
-		<div class="container">
+	<div class="container-fluid p-0">
+		<div class="container p-0">
 			<div class="row justify-content-center align-content-center" style="height: 100vh;">
 				<div class="col-12">
 					<div class="row justify-content-center" style="height: 100vh;">
@@ -40,7 +40,9 @@
     canvas.width = rect.width;
     canvas.height = rect.height;
 
-    const canvasRadius = Math.min(canvas.height, canvas.width) / 2.5;
+    const isPortraitMode = canvas.height > canvas.width;
+    const scaleFactor = isPortraitMode ? 2.1 : 2.4;
+    const canvasRadius = Math.min(canvas.height, canvas.width) / scaleFactor;
     
     const clockRadius = canvasRadius * 0.9;
     context.lineWidth = clockRadius * 0.01;
