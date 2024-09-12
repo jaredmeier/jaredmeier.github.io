@@ -1,0 +1,470 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <title>crossword</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta property="og:title" content="crossword">
+  <meta property="og:description" content="crossword">
+  <link rel="icon" href="./images/jared-meier-cropped.png" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tiro+Gurmukhi&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <script src="https://kit.fontawesome.com/e93199a89e.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <div class="container page-container crossword full-height d-flex flex-column justify-content-center">
+    <div class="row timer text-center mb-4">
+      <h1 id="time">60</h1>
+    </div>
+    <div class="row mt-3">
+      <div class="col-sm-12 col-md-6 col-lg-4 ml-lg-2 px-0 pb-4 mb-4">
+        <div class="container-fluid grid" tabindex="0"></div>
+      </div>
+      <div class="col-sm-12 col-md-6 col-lg-4 ">
+        <!-- Clue Lists -->
+        <div class="row">
+          <div class="col-6">
+            <h5>Across</h5>
+            <ol id="across-clues" class="clues-list">
+              <!-- Across clues will go here -->
+            </ol>
+          </div>
+          <div class="col-6">
+            <h5>Down</h5>
+            <ol id="down-clues" class="clues-list">
+              <!-- Down clues will go here -->
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="button-container py-3">
+      <button class="arrow-button btn btn-outline-primary border-0">
+        <i class="fa-solid fa-circle-right"></i>
+      </button>
+    </div>
+  </div>
+
+
+  <script>
+    let selected = null;
+
+    // horizontal auto-focus 0; vertical 1
+    let mode = 0;
+
+    const wordDisplay = document.querySelector('.word-display');
+
+    const button = document.querySelector('.arrow-button');
+    button && button.addEventListener('click', (_event) => {
+      toggleMode();
+    });
+
+    // create row squares, labels, and inputs
+    const gridContainer = document.querySelector('.grid');
+    const size = 5;
+    let counter = 1;
+
+    for (let i = 0; i < size; i++) {
+      const row = document.createElement('div');
+      row.classList.add('row');
+      gridContainer.appendChild(row);
+
+      for (let j = 0; j < size; j++) {
+        const squareContainer = document.createElement('div');
+        squareContainer.classList.add('square-container', 'col');
+        row.appendChild(squareContainer);
+
+        // create label
+        const div = document.createElement('div');
+        div.classList.add('square-number');
+        squareContainer.appendChild(div);
+
+        // create input for square
+        const square = document.createElement('input');
+        square.classList.add('square', 'col-sm-1');
+        square.setAttribute('type', 'text');
+        square.setAttribute('maxlength', '1');
+        squareContainer.appendChild(square);
+
+        counter++;
+      }
+    }
+
+    const rows = document.querySelectorAll('.grid > .row');
+    const squares = document.querySelectorAll('.square');
+
+    const squaresArray = Array.from(squares);
+    const squaresAsGrid = [];
+    while (squaresArray.length) squaresAsGrid.push(squaresArray.splice(0, size));
+
+    renumber();
+
+    function debounce(callback, timeout = 2000) {
+      let timer;
+      return (...args) => {
+        window.clearTimeout(timer);
+        timer = window.setTimeout(() => {
+          callback.apply(null, args);
+        }, timeout);
+      };
+    }
+
+    function toggleSelected(square) {
+      if (selected) {
+        selected.classList.remove('selected');
+      }
+
+      if (!square) return;
+
+      if (!square.classList.contains('blacked-out')) {
+        selected = square;
+        square.classList.add('selected');
+
+        highlightClue(square);
+      };
+    }
+
+    function toggleMode() {
+      if (mode === 0) {
+        setMode(1);
+      } else {
+        setMode(0);
+      }
+    }
+
+    function setMode(val) {
+      mode = val;
+      if (button) {
+        if (mode === 1 && !button.classList.contains('down')) button.classList.add('down');
+        if (mode === 0 && button.classList.contains('down')) button.classList.remove('down');
+      }
+
+      if (selected) {
+        highlightDirection(selected);
+        highlightClue(selected);
+      }
+    }
+
+    function highlightClue(square) {
+      const clueIdx = mode === 0 ? rowIndex(square) : columnIndex(square);
+      const clueId = mode === 0 ? '#across-clues' : '#down-clues';
+      document.querySelectorAll('.clues-list li').forEach((clue) => clue.classList.remove('highlighted'));
+      const clue = document.querySelectorAll(clueId + ' li')[clueIdx];
+      clue.classList.add('highlighted');
+    }
+
+    function rowNode(square) {
+      return square.parentNode.parentNode;
+    }
+
+    function highlightDirection(square) {
+      clearHighlights();
+      if (mode === 0) {
+        highlightRow(square);
+      } else {
+        highlightCol(square);
+      }
+    }
+
+    function highlightRow(square) {
+      const rowSquares = rowNode(square).querySelectorAll('.square');
+      for (let i = 0; i < rowSquares.length; i++) {
+        rowSquares[i].classList.add('highlighted');
+      }
+    }
+
+    function highlightCol(square) {
+      const childIdx = columnIndex(square);
+      rows.forEach((row) => {
+        const square = row.querySelectorAll('.square')[childIdx];
+        square.classList.add('highlighted');
+      });
+    }
+
+    function clearHighlights() {
+      squares.forEach((square) => square.classList.remove('highlighted'));
+    }
+
+    function columnIndex(square) {
+      const children = rowNode(square).querySelectorAll('.square');
+
+      let childIdx;
+      for (let i = 0; i < children.length; i++) {
+        if (children[i] === square) {
+          childIdx = i;
+          break;
+        }
+      }
+      return childIdx;
+    }
+
+    function rowIndex(square) {
+      const row = rowNode(square);
+      let rowIdx;
+      for (let i = 0; i < rows.length; i++) {
+        if (rows[i] === row) {
+          rowIdx = i;
+          break;
+        }
+      }
+      return rowIdx;
+    }
+
+    function isBlackedOut(square) {
+      return square.classList.contains('blacked-out');
+    }
+
+    function focusNextOrPrev(square, prev) {
+      if (mode === 0) {
+        const rowSquares = rowNode(square).querySelectorAll('.square');
+        let idx = columnIndex(square);
+        let nextSquare;
+        while (!nextSquare || isBlackedOut(square)) {
+          idx = prev ? idx - 1 : idx + 1;
+
+          if (idx < 0) break;
+
+          nextSquare = rowSquares[idx];
+
+          if (!nextSquare) break;
+        }
+        if (nextSquare) {
+          nextSquare.focus();
+        }
+      } else {
+        const row = rowNode(square);
+        const childIdx = columnIndex(square);
+        let currRow = row;
+        let nextRow;
+        let nextSquare;
+        while (!nextSquare || isBlackedOut(square)) {
+          nextRow = prev ? currRow.previousElementSibling : currRow.nextElementSibling;
+
+          if (!nextRow) break;
+
+          nextSquare = nextRow.querySelectorAll('.square')[childIdx];
+          currRow = nextRow;
+        }
+
+        if (nextSquare) {
+          nextSquare.focus();
+        }
+      }
+    }
+
+    function focusNext(square) {
+      focusNextOrPrev(square, false);
+    }
+
+    function focusPrevious(square) {
+      focusNextOrPrev(square, true);
+    }
+
+    function renumber() {
+      const squareContainers = gridContainer.querySelectorAll('.square-container');
+      let counter = 1;
+      squareContainers.forEach((div) => {
+        const square = div.querySelector('.square');
+
+        const colIdx = columnIndex(square);
+        const rowIdx = rowIndex(square);
+
+        // if there's an empty square to the left or above, then it's the start of answer
+        const topNeighbor = rowIdx > 0 ? squaresAsGrid[rowIdx - 1][colIdx] : null;
+        const leftNeighbor = colIdx > 0 ? squaresAsGrid[rowIdx][colIdx - 1] : null;
+
+        const isBorderSquare = !leftNeighbor || !topNeighbor || isBlackedOut(leftNeighbor) || isBlackedOut(topNeighbor);
+
+        const numDiv = div.querySelector('.square-number');
+
+        if (isBorderSquare && !isBlackedOut(square)) {
+          numDiv.innerHTML = counter;
+          counter++;
+        } else {
+          numDiv.innerHTML = '';
+        }
+      });
+    }
+
+    squares.forEach((square) => {
+      square.addEventListener('focus', (event) => {
+        toggleSelected(square);
+        highlightDirection(square);
+      });
+
+      square.addEventListener('mousedown', (event) => {
+        event.preventDefault();
+        if (event.ctrlKey || event.metaKey || square === selected) {
+          toggleMode();
+        }
+        toggleSelected(square);
+        highlightDirection(square);
+        square.focus();
+      });
+
+      square.addEventListener('dblclick', (event) => {
+        toggleMode();
+      });
+
+      square.addEventListener('keydown', (event) => {
+        switch (event.keyCode) {
+          // change input direction when \ is pressed
+          case 220:
+            event.preventDefault();
+            toggleMode();
+            break;
+
+          // go back on delete/backspace
+          case 8:
+            event.preventDefault();
+            square.value = null;
+            focusPrevious(square);
+            break;
+
+          // handle arrow keys
+          case 37:
+            event.preventDefault();
+            setMode(0);
+            focusPrevious(square);
+            break;
+          case 38:
+            event.preventDefault();
+            setMode(1);
+            focusPrevious(square);
+            break;
+          case 39:
+            event.preventDefault();
+            setMode(0);
+            focusNext(square);
+            break;
+          case 40:
+            event.preventDefault();
+            setMode(1);
+            focusNext(square);
+            break;
+        }
+
+        if (event.key.match(/^[a-zA-Z]$/)) {
+          event.preventDefault();
+          square.value = event.key;
+
+          focusNext(square);
+        }
+      });
+    });
+
+    // Hardcoded clues and answers for across and down
+    const acrossClues = [
+      { number: 1, clue: "They go out into the water" },
+      { number: 6, clue: "'Right?' across the pond" },
+      { number: 7, clue: "___ him!" },
+      { number: 8, clue: "Arthritic lessor" },
+      { number: 9, clue: "Pop-pop twin" },
+    ];
+
+    const downClues = [
+      { number: 1, clue: "Grape spirit" },
+      { number: 2, clue: "Where ORs are" },
+      { number: 3, clue: "PC progenitor" },
+      { number: 4, clue: "Slice for a Wu-Tang member?" },
+      { number: 5, clue: "Bull without balls" },
+    ];
+
+    // Answers (for both across and down)
+    const answers = ["Apple", "Blue", "Dog"];
+
+    // Append across clues to across-clues list
+    const acrossClueList = document.getElementById('across-clues');
+    acrossClues.forEach(clue => {
+      const clueItem = document.createElement('li');
+      clueItem.textContent = `${clue.number}. ${clue.clue}`;
+      acrossClueList.appendChild(clueItem);
+    });
+
+    // Append down clues to down-clues list
+    const downClueList = document.getElementById('down-clues');
+    downClues.forEach(clue => {
+      const clueItem = document.createElement('li');
+      clueItem.textContent = `${clue.number}. ${clue.clue}`;
+      downClueList.appendChild(clueItem);
+    });
+
+    // add mouse-over highlight
+    document.querySelectorAll('#across-clues li').forEach(clue => {
+      clue.addEventListener('mouseover', () => {
+        const clueNumber = parseInt(clue.textContent.split('.')[0], 10);  // Extract clue number
+        const clueRow = acrossClues.findIndex(c => c.number === clueNumber);
+
+        const firstSquare = squaresAsGrid[clueRow][0];
+
+        toggleSelected(firstSquare);
+        highlightRow(firstSquare);  // Highlight the row for Across clues
+        setMode(0);
+      });
+    });
+
+    document.querySelectorAll('#down-clues li').forEach(clue => {
+      clue.addEventListener('mouseover', () => {
+        const clueNumber = parseInt(clue.textContent.split('.')[0], 10);  // Extract clue number
+        const clueCol = downClues.findIndex(c => c.number === clueNumber);
+
+        const firstSquare = squaresAsGrid[0][clueCol];
+        toggleSelected(firstSquare);
+        highlightCol(firstSquare);
+        setMode(1);
+      });
+    });
+
+    let timeLeft = 60;  // Set the timer duration (in seconds)
+    const timeDisplay = document.getElementById('time');
+    const pageContainer = document.querySelector('.page-container');
+    let shakeInterval;
+
+    // Start the countdown timer
+    const timer = setInterval(() => {
+      timeLeft--;
+
+      // Update the display
+      timeDisplay.textContent = timeLeft;
+
+      // Intensify screen shake as time decreases
+      if (timeLeft <= 45 && timeLeft > 0) {
+        // Add screen shake class if not already applied
+        if (!pageContainer.classList.contains('shake')) {
+          pageContainer.classList.add('shake');
+        }
+
+        // Increase intensity (decrease the shake interval time) and shake amplitude
+        const shakeSpeed = 100 - (10 - timeLeft) * 10;  // Faster shaking as time approaches 0
+        const shakeAmplitude = (10 - timeLeft) * 2;  // Larger shaking as time approaches 0
+
+        // Clear any previous interval
+        if (shakeInterval) clearInterval(shakeInterval);
+
+        // Start new shaking interval with increased intensity
+        shakeInterval = setInterval(() => {
+          const randomX = Math.random() * shakeAmplitude - shakeAmplitude / 2;
+          const randomY = Math.random() * shakeAmplitude - shakeAmplitude / 2;
+          pageContainer.style.transform = `translate(${randomX}px, ${randomY}px)`;
+        }, shakeSpeed);
+
+      } else if (timeLeft === 0) {
+        clearInterval(timer);
+        clearInterval(shakeInterval);
+        pageContainer.classList.remove('shake');
+        pageContainer.style.transform = 'none';  // Stop shaking
+      }
+
+    }, 1000);
+
+  </script>
+</body>
+
+</html>
