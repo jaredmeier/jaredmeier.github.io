@@ -45,6 +45,10 @@ body {
   height: 20%;
 }
 
+input {
+  touch-action: none;
+}
+
 .square-container {
   margin: 0;
 }
