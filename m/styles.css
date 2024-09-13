@@ -21,7 +21,9 @@
 body {
   background-color: #45364B;
   color: white;
+  height: 100%;
   overflow: hidden;
+  border-radius: 0;
 }
 
 .grid-row {
