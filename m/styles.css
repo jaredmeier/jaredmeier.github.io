@@ -12,6 +12,12 @@
   --mydarkgreen: rgb(18, 102, 79);
 }
 
+/* english-violet (light) #62466b */
+/* english-violet (dark)  #45364B */
+/* raisin black           #2D2327 */
+/* cool gray              #8C93A8 */
+/* ash gray               #B5C2B7 */
+
 body {
   background-color: #45364B;
   color: white;

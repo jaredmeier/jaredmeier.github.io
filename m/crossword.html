@@ -4,7 +4,8 @@
 <head>
   <title>crossword</title>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, user-scalable=no, interactive-widget=overlays-content" />
   <meta property="og:title" content="crossword">
   <meta property="og:description" content="crossword">
   <link rel="icon" href="./images/jared-meier-cropped.png" />
@@ -20,17 +21,17 @@
 
 <body>
   <div class="page-container crossword full-height d-flex flex-column">
-    <div class="row timer text-center">
-      <h1 id="time">60</h1>
+    <div class="row time px-2">
+      <div class="col-10 d-flex align-items-center">
+        <span id="clue">___</span>
+      </div>
+      <div class="col-2">
+        <h1 id="time">60</h1>
+      </div>
     </div>
     <div class="row grid-row">
       <div class="col-12 px-0">
         <div class="grid" tabindex="0"></div>
-      </div>
-    </div>
-    <div class="row mt-3">
-      <div class="col-12 p-2 d-flex justify-content-center">
-        <p id="clue">___</p>
       </div>
     </div>
   </div>
