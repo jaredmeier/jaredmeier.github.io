@@ -21,7 +21,7 @@
 body {
   background-color: #45364B;
   color: white;
-  height: 100%;
+  height: 100vh;
   overflow: hidden;
   border-radius: 0;
 }
