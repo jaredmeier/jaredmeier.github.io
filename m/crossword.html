@@ -21,7 +21,7 @@
   <div class="page-container crossword full-height d-flex flex-column">
     <div class="row time px-2">
       <div class="col-10 d-flex align-items-center">
-        <span id="clue">?</span>
+        <span id="clue">?!</span>
       </div>
       <div class="col-2">
         <h1 id="time">60</h1>
@@ -276,6 +276,7 @@
 
     squares.forEach((square) => {
       square.addEventListener('focus', (event) => {
+        event.preventDefault();
         toggleSelected(square);
         highlightDirection(square);
         window.scrollTo(0, 0);
