@@ -31,7 +31,7 @@ body {
 }
 
 .grid-row {
-  height: 48%;
+  height: 50%;
 }
 
 .grid {
@@ -250,12 +250,9 @@ body {
   background-color: #8C93A8;
   color: #2D2327;
   width: 100%;
-  /* Fill available grid cell space */
   padding-top: 100%;
-  /* Maintain square aspect ratio */
   position: relative;
   box-sizing: border-box;
-  /* Ensure border and padding don't affect size */
 }
 
 .keyboard-key span {

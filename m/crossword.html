@@ -21,7 +21,7 @@
   <div class="page-container crossword full-height d-flex flex-column">
     <div class="row time px-2">
       <div class="col-10 d-flex align-items-center">
-        <span id="clue">?!</span>
+        <span id="clue">!!!</span>
       </div>
       <div class="col-2">
         <h1 id="time">60</h1>
@@ -117,7 +117,7 @@
       if (!square.classList.contains('blacked-out')) {
         selected = square;
         square.classList.add('selected');
-
+        highlightDirection(selected);
         setClue(square);
       };
     }
@@ -219,7 +219,20 @@
         while (!nextSquare || isBlackedOut(square)) {
           idx = prev ? idx - 1 : idx + 1;
 
-          if (idx < 0) break;
+          const rowIdx = rowIndex(square);
+          if (idx < 0) {
+            if (rowIdx > 0) {
+              nextSquare = squaresAsGrid[rowIdx - 1][size - 1];
+              break;
+            } else break;
+          }
+
+          if (idx > (size - 1)) {
+            if (rowIdx < (size - 1)) {
+              nextSquare = squaresAsGrid[rowIdx + 1][0];
+              break;
+            } else break;
+          }
 
           nextSquare = rowSquares[idx];
 
@@ -230,12 +243,26 @@
         }
       } else {
         const row = rowNode(square);
+        let rowIdx = rowIndex(square);
         const childIdx = columnIndex(square);
         let currRow = row;
         let nextRow;
         let nextSquare;
         while (!nextSquare || isBlackedOut(square)) {
+          rowIdx = prev ? rowIdx - 1 : rowIdx + 1;
           nextRow = prev ? currRow.previousElementSibling : currRow.nextElementSibling;
+
+          if (rowIdx > (size - 1)) {
+            if (childIdx < (size - 1)) {
+              nextSquare = squaresAsGrid[0][childIdx + 1];
+            } else break;
+          }
+
+          if (rowIdx < 0) {
+            if (childIdx > 0) {
+              nextSquare = squaresAsGrid[size - 1][childIdx - 1];
+            } else break;
+          }
 
           if (!nextRow) break;
 
@@ -284,13 +311,6 @@
     }
 
     squares.forEach((square) => {
-      square.addEventListener('focus', (event) => {
-        event.preventDefault();
-        toggleSelected(square);
-        highlightDirection(square);
-        window.scrollTo(0, 0);
-      });
-
       square.addEventListener('mousedown', (event) => {
         event.preventDefault();
         if (event.ctrlKey || event.metaKey || square === selected) {
@@ -299,28 +319,6 @@
         toggleSelected(square);
         highlightDirection(square);
         square.focus();
-      });
-
-      square.addEventListener('dblclick', (event) => {
-        toggleMode();
-      });
-
-      square.addEventListener('keydown', (event) => {
-        switch (event.keyCode) {
-          // go back on delete/backspace
-          case 8:
-            event.preventDefault();
-            square.value = null;
-            focusPrevious(square);
-            break;
-        }
-
-        if (event.key.match(/^[a-zA-Z]$/)) {
-          event.preventDefault();
-          square.value = event.key;
-
-          focusNext(square);
-        }
       });
     });
 
@@ -386,7 +384,7 @@
     document.addEventListener('DOMContentLoaded', function () {
       const row1 = 'QWERTYUIOP';
       const row2 = 'ASDFGHJKL';
-      const row3 = 'ZXCVBNM>';
+      const row3 = 'ZXCVBNM␡';
 
       const keyboardContainerRow1 = document.querySelector('.row-1');
       const keyboardContainerRow2 = document.querySelector('.row-2');
@@ -403,13 +401,12 @@
         keyButton.appendChild(span);
 
         // Event listener for each key press
-        keyButton.addEventListener('click', function () {
-          if (letter === '>') {
-            deleteLetter();
-            return;
-          }
+        keyButton.addEventListener('touchstart', function () {
+          handleKeyDown(letter, keyButton);
+        });
 
-          insertLetter(letter);
+        keyButton.addEventListener('mousedown', function () {
+          handleKeyDown(letter, keyButton);
         });
 
         container.appendChild(keyButton);
@@ -419,6 +416,15 @@
       row1.split('').forEach(letter => createButton(letter, keyboardContainerRow1));
       row2.split('').forEach(letter => createButton(letter, keyboardContainerRow2));
       row3.split('').forEach(letter => createButton(letter, keyboardContainerRow3));
+
+      function handleKeyDown(letter, button) {
+        if (letter === '␡') {
+          deleteLetter();
+          return;
+        }
+
+        insertLetter(letter);
+      }
 
       // Insert the letter into the currently focused input
       function insertLetter(letter) {
