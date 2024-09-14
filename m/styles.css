@@ -51,6 +51,7 @@ body {
 
 .square-container {
   margin: 0;
+  box-sizing: border-box;
 }
 
 .square {
@@ -65,7 +66,8 @@ body {
   opacity: 100%;
   background-color: #b5c2b7;
   color: #2d2327;
-  padding-top: 20px;
+  padding-top: 15px;
+  box-sizing: border-box;
 }
 
 .square:focus {
