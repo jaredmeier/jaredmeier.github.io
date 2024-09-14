@@ -21,7 +21,7 @@
 body {
   background-color: #45364B;
   color: white;
-  height: 500px;
+  height: 100vh;
   overflow: hidden;
   border-radius: 0;
 }
@@ -45,10 +45,6 @@ body {
   height: 20%;
 }
 
-input {
-  touch-action: none;
-}
-
 .square-container {
   margin: 0;
 }
@@ -65,6 +61,7 @@ input {
   opacity: 100%;
   background-color: #b5c2b7;
   color: #2d2327;
+  padding-top: 20px;
 }
 
 .square:focus {
@@ -204,4 +201,61 @@ input {
 
 .shake {
   animation: shake 0.5s infinite;
+}
+
+.keyboard-container {
+  width: 100%;
+}
+
+#virtual-keyboard {
+  display: flex;
+  flex-direction: column;
+  /* Stack rows vertically */
+  width: 100%;
+  margin: 0 auto;
+  height: 100%;
+}
+
+.keyboard-row {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  width: 100%;
+}
+
+.row-1 {
+  grid-template-columns: repeat(10, 1fr);
+  /* 10 keys */
+}
+
+.row-2 {
+  grid-template-columns: repeat(9, 1fr) 1fr;
+  /* 9 keys + 1 empty to align with row 1 */
+  margin-left: 5%;
+}
+
+.row-3 {
+  grid-template-columns: repeat(7, 1fr) repeat(3, 1fr);
+  /* 7 keys + 3 empty to align with row 1 */
+  margin-left: 10%;
+}
+
+.keyboard-key {
+  border-color: #62466b;
+  background-color: #8C93A8;
+  color: #2D2327;
+  width: 100%;
+  /* Fill available grid cell space */
+  padding-top: 100%;
+  /* Maintain square aspect ratio */
+  position: relative;
+  box-sizing: border-box;
+  /* Ensure border and padding don't affect size */
+}
+
+.keyboard-key span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
 }

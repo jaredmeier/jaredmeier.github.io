@@ -32,6 +32,17 @@
         <div class="grid" tabindex="0"></div>
       </div>
     </div>
+
+    <div class="row keyboard-container d-flex mx-0 mt-3">
+      <div class="col-12 p-0">
+        <div id="virtual-keyboard">
+          <!-- QWERTY Rows -->
+          <div class="keyboard-row row-1"></div>
+          <div class="keyboard-row row-2"></div>
+          <div class="keyboard-row row-3"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
 
@@ -69,10 +80,8 @@
         squareContainer.appendChild(div);
 
         // create input for square
-        const square = document.createElement('input');
+        const square = document.createElement('div');
         square.classList.add('square', 'col-sm-1');
-        square.setAttribute('type', 'text');
-        square.setAttribute('maxlength', '1');
         squareContainer.appendChild(square);
 
         counter++;
@@ -217,7 +226,7 @@
           if (!nextSquare) break;
         }
         if (nextSquare) {
-          nextSquare.focus();
+          toggleSelected(nextSquare);
         }
       } else {
         const row = rowNode(square);
@@ -235,7 +244,7 @@
         }
 
         if (nextSquare) {
-          nextSquare.focus();
+          toggleSelected(nextSquare);
         }
       }
     }
@@ -298,39 +307,11 @@
 
       square.addEventListener('keydown', (event) => {
         switch (event.keyCode) {
-          // change input direction when \ is pressed
-          case 220:
-            event.preventDefault();
-            toggleMode();
-            break;
-
           // go back on delete/backspace
           case 8:
             event.preventDefault();
             square.value = null;
             focusPrevious(square);
-            break;
-
-          // handle arrow keys
-          case 37:
-            event.preventDefault();
-            setMode(0);
-            focusPrevious(square);
-            break;
-          case 38:
-            event.preventDefault();
-            setMode(1);
-            focusPrevious(square);
-            break;
-          case 39:
-            event.preventDefault();
-            setMode(0);
-            focusNext(square);
-            break;
-          case 40:
-            event.preventDefault();
-            setMode(1);
-            focusNext(square);
             break;
         }
 
@@ -360,9 +341,6 @@
       { number: 5, clue: "Bull without balls" },
     ];
 
-    // Answers (for both across and down)
-    const answers = ["Apple", "Blue", "Dog"];
-
     let timeLeft = 60;  // Set the timer duration (in seconds)
     const timeDisplay = document.getElementById('time');
     const pageContainer = document.querySelector('.page-container');
@@ -376,7 +354,7 @@
       timeDisplay.textContent = timeLeft;
 
       // Intensify screen shake as time decreases
-      if (timeLeft <= 0 && timeLeft > 0) {
+      if (timeLeft <= 45 && timeLeft > 0) {
         // Add screen shake class if not already applied
         if (!pageContainer.classList.contains('shake')) {
           pageContainer.classList.add('shake');
@@ -404,6 +382,63 @@
       }
 
     }, 1000);
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const row1 = 'QWERTYUIOP';
+      const row2 = 'ASDFGHJKL';
+      const row3 = 'ZXCVBNM>';
+
+      const keyboardContainerRow1 = document.querySelector('.row-1');
+      const keyboardContainerRow2 = document.querySelector('.row-2');
+      const keyboardContainerRow3 = document.querySelector('.row-3');
+
+      // Function to create buttons
+      function createButton(letter, container) {
+        const keyButton = document.createElement('button');
+        keyButton.classList.add('btn', 'btn-outline-primary', 'keyboard-key');
+
+        // Add the letter inside a span for centering
+        const span = document.createElement('span');
+        span.textContent = letter;
+        keyButton.appendChild(span);
+
+        // Event listener for each key press
+        keyButton.addEventListener('click', function () {
+          if (letter === '>') {
+            deleteLetter();
+            return;
+          }
+
+          insertLetter(letter);
+        });
+
+        container.appendChild(keyButton);
+      }
+
+      // Create keyboard buttons for each row
+      row1.split('').forEach(letter => createButton(letter, keyboardContainerRow1));
+      row2.split('').forEach(letter => createButton(letter, keyboardContainerRow2));
+      row3.split('').forEach(letter => createButton(letter, keyboardContainerRow3));
+
+      // Insert the letter into the currently focused input
+      function insertLetter(letter) {
+        if (selected) {
+          selected.textContent = letter;
+          focusNext(selected);
+        }
+      }
+
+      function deleteLetter() {
+        if (selected) {
+          if (selected.textContent) {
+            selected.textContent = '';
+            return;
+          }
+
+          focusPrevious(selected);
+        }
+      }
+    });
 
   </script>
 </body>
