@@ -18,6 +18,10 @@
 /* cool gray              #8C93A8 */
 /* ash gray               #B5C2B7 */
 
+* {
+  touch-action: none;
+}
+
 body {
   background-color: #45364B;
   color: white;
