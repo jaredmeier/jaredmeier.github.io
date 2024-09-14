@@ -400,10 +400,6 @@
         span.textContent = letter;
         keyButton.appendChild(span);
 
-        // Event listener for each key press
-        keyButton.addEventListener('touchstart', function () {
-          handleKeyDown(letter, keyButton);
-        });
 
         keyButton.addEventListener('mousedown', function () {
           handleKeyDown(letter, keyButton);
