@@ -22,6 +22,11 @@
   touch-action: none;
 }
 
+.btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+
 body {
   background-color: #45364B;
   color: white;
@@ -92,17 +97,12 @@ body {
   justify-content: center;
 }
 
-.arrow-button {
-  font-size: 2rem;
-  color: #0d6efd;
+.nav-clues-row {
+  background-color: #8C93A8;
 }
 
-.arrow-button .fa-circle-right {
-  transform: rotate(0deg);
-}
-
-.arrow-button.down .fa-circle-right {
-  transform: rotate(90deg);
+.clue-nav .arrow-left {
+  transform: rotate(180deg);
 }
 
 .square-container {
@@ -247,7 +247,7 @@ body {
 
 .keyboard-key {
   border-color: #62466b;
-  background-color: #8C93A8;
+  background-color: #B5C2B7;
   color: #2D2327;
   width: 100%;
   padding-top: 100%;

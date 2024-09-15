@@ -19,12 +19,12 @@
 
 <body>
   <div class="page-container crossword full-height d-flex flex-column">
-    <div class="row time px-2">
-      <div class="col-10 d-flex align-items-center">
-        <span id="clue">!!!</span>
-      </div>
+    <div class="row time px-3 pt-1">
       <div class="col-2">
         <h1 id="time">60</h1>
+      </div>
+      <div class="col-10 text-end">
+        <h1>#1</h1>
       </div>
     </div>
     <div class="row grid-row">
@@ -32,8 +32,21 @@
         <div class="grid" tabindex="0"></div>
       </div>
     </div>
+    <div class="row py-2 px-3 nav-clues-row">
+      <div class="col-12 d-flex align-items-center justify-content-between">
+        <button class="btn btn-sm btn-outline-secondary clue-nav">
+          <i class="fa-solid fa-chevron-right arrow-left" onclick="selectPreviousClue()"></i>
+        </button>
+        <button class="btn w-100" onclick="toggleMode()">
+          <span id="clue">!!!</span>
+        </button>
+        <button class="btn btn-sm btn-outline-secondary clue-nav" onclick="selectNextClue()">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
 
-    <div class="row keyboard-container d-flex mx-0 mt-3">
+    <div class="row keyboard-container d-flex mx-0">
       <div class="col-12 p-0">
         <div id="virtual-keyboard">
           <!-- QWERTY Rows -->
@@ -53,11 +66,6 @@
     let mode = 0;
 
     const wordDisplay = document.querySelector('.word-display');
-
-    const button = document.querySelector('.arrow-button');
-    button && button.addEventListener('click', (_event) => {
-      toggleMode();
-    });
 
     // create row squares, labels, and inputs
     const gridContainer = document.querySelector('.grid');
@@ -132,10 +140,6 @@
 
     function setMode(val) {
       mode = val;
-      if (button) {
-        if (mode === 1 && !button.classList.contains('down')) button.classList.add('down');
-        if (mode === 0 && button.classList.contains('down')) button.classList.remove('down');
-      }
 
       if (selected) {
         highlightDirection(selected);
@@ -143,11 +147,42 @@
       }
     }
 
+    function selectNextClue() {
+      selectNextOrPreviousClue();
+    }
+
+    function selectPreviousClue() {
+      selectNextOrPreviousClue(true);
+    }
+
+    function selectNextOrPreviousClue(prev = false) {
+      const clueEl = document.querySelector('#clue');
+      const clueList = mode === 0 ? acrossClues : downClues;
+      let currentClueIdx = clueList.findIndex((clue) => clue.clue === clueEl.textContent);
+
+      let nextClueIdx;
+      if (prev) {
+        currentClueIdx = Math.max(currentClueIdx, 0);
+        nextClueIdx = (currentClueIdx - 1 + clueList.length) % clueList.length;
+      } else {
+        nextClueIdx = (currentClueIdx + 1) % clueList.length;
+      }
+
+      let clueStartingSquare;
+      if (mode === 0) {
+        clueStartingSquare = squaresAsGrid[nextClueIdx][0];
+      } else {
+        clueStartingSquare = squaresAsGrid[0][nextClueIdx];
+      }
+
+      focusNextOrPrev(clueStartingSquare);
+    }
+
     function setClue(square) {
       const clueEl = document.querySelector('#clue');
       const clueIdx = mode === 0 ? rowIndex(square) : columnIndex(square);
       const clue = mode === 0 ? acrossClues[clueIdx] : downClues[clueIdx];
-      clueEl.textContent = `${clue.number}. ${clue.clue}`;
+      clueEl.textContent = `${clue.clue}`;
     }
 
     function rowNode(square) {
@@ -212,67 +247,91 @@
     }
 
     function focusNextOrPrev(square, prev) {
+      if (!square) square = squaresAsGrid[0][0];
+
+      const squares = Array.from(document.querySelectorAll('.square'));
+      const anyEmptySquare = squares.some((square) => !square.textContent);
+      if (!anyEmptySquare) return;
+
+      let rowIdx = rowIndex(square);
+      let colIdx = columnIndex(square);
+      let nextSquare;
+
       if (mode === 0) {
-        const rowSquares = rowNode(square).querySelectorAll('.square');
-        let idx = columnIndex(square);
-        let nextSquare;
-        while (!nextSquare || isBlackedOut(square)) {
-          idx = prev ? idx - 1 : idx + 1;
-
-          const rowIdx = rowIndex(square);
-          if (idx < 0) {
-            if (rowIdx > 0) {
-              nextSquare = squaresAsGrid[rowIdx - 1][size - 1];
-              break;
-            } else break;
+        // handle going back, which just selects previous
+        if (prev) {
+          colIdx--;
+          if (colIdx < 0) {
+            colIdx = size - 1;
+            rowIdx--;
+            if (rowIdx < 0) {
+              rowIdx = size - 1;
+            }
           }
+          nextSquare = squaresAsGrid[rowIdx][colIdx];
+        } else {
+          while (!nextSquare || nextSquare.textContent) {
+            nextSquare = squaresAsGrid[rowIdx][colIdx];
 
-          if (idx > (size - 1)) {
-            if (rowIdx < (size - 1)) {
-              nextSquare = squaresAsGrid[rowIdx + 1][0];
-              break;
-            } else break;
+            const rowSquares = Array.from(rowNode(nextSquare).querySelectorAll('.square'));
+            const anyEmptySquareInRow = rowSquares.some((square) => !square.textContent);
+
+            if (!anyEmptySquareInRow) {
+              colIdx = 0;
+              rowIdx++;
+              if (rowIdx > (size - 1)) {
+                rowIdx = 0;
+              }
+              continue;
+            }
+
+            colIdx++;
+            if (colIdx > (size - 1)) {
+              colIdx = 0;
+            }
           }
-
-          nextSquare = rowSquares[idx];
-
-          if (!nextSquare) break;
-        }
-        if (nextSquare) {
-          toggleSelected(nextSquare);
         }
       } else {
         const row = rowNode(square);
-        let rowIdx = rowIndex(square);
-        const childIdx = columnIndex(square);
         let currRow = row;
-        let nextRow;
-        let nextSquare;
-        while (!nextSquare || isBlackedOut(square)) {
-          rowIdx = prev ? rowIdx - 1 : rowIdx + 1;
-          nextRow = prev ? currRow.previousElementSibling : currRow.nextElementSibling;
 
-          if (rowIdx > (size - 1)) {
-            if (childIdx < (size - 1)) {
-              nextSquare = squaresAsGrid[0][childIdx + 1];
-            } else break;
-          }
-
+        // handle going back, which just selects previous
+        if (prev) {
+          rowIdx--;
           if (rowIdx < 0) {
-            if (childIdx > 0) {
-              nextSquare = squaresAsGrid[size - 1][childIdx - 1];
-            } else break;
+            rowIdx = size - 1;
+            colIdx--;
+            if (colIdx < 0) {
+              colIdx = size - 1;
+            }
           }
+          nextSquare = squaresAsGrid[rowIdx][colIdx];
+        } else {
+          while (!nextSquare || nextSquare.textContent) {
+            nextSquare = squaresAsGrid[rowIdx][colIdx];
 
-          if (!nextRow) break;
+            const colSquares = squaresAsGrid.map((row) => row[colIdx]);
+            const anyEmptySquareInCol = colSquares.some((square) => !square.textContent);
 
-          nextSquare = nextRow.querySelectorAll('.square')[childIdx];
-          currRow = nextRow;
+            if (!anyEmptySquareInCol) {
+              rowIdx = 0;
+              colIdx++;
+              if (colIdx > (size - 1)) {
+                colIdx = 0;
+              }
+              continue;
+            }
+
+            rowIdx++;
+            if (rowIdx > (size - 1)) {
+              rowIdx = 0;
+            }
+          }
         }
+      }
 
-        if (nextSquare) {
-          toggleSelected(nextSquare);
-        }
+      if (nextSquare) {
+        toggleSelected(nextSquare);
       }
     }
 
