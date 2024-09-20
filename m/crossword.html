@@ -90,20 +90,37 @@
         ]
       },
       {
-        correctAnswers: 'NOTCLEARTOMEYET',
+        correctAnswers: 'SLOTHMACHUINCANTAUNTHIRES',
         acrossClues: [
-          { number: 1, clue: "Have a look see then?" },
-          { number: 6, clue: "'Right?' across the pond" },
-          { number: 7, clue: "___ him!" },
-          { number: 8, clue: "Arthritic lessor" },
-          { number: 9, clue: "Pop-pop twin" },
+          { number: 1, clue: "A sin or a few-toed friend" },
+          { number: 6, clue: "Peruvian citadel" },
+          { number: 7, clue: "Like 6 across" },
+          { number: 8, clue: "Razz" },
+          { number: 9, clue: "Takes on" },
         ],
         downClues: [
-          { number: 1, clue: "Grape spirit" },
-          { number: 2, clue: "Where ORs are" },
-          { number: 3, clue: "PC progenitor" },
-          { number: 4, clue: "Slice for a Wu-Tang member?" },
-          { number: 5, clue: "Bull without balls" },
+          { number: 1, clue: "Beloved who once haunted Hampshire halls" },
+          { number: 2, clue: "Tiny Hawaiian island" },
+          { number: 3, clue: "Happen" },
+          { number: 4, clue: "Macbeth's title" },
+          { number: 5, clue: "Ethan and Helen" },
+        ]
+      },
+      {
+        correctAnswers: 'AGNESBOOSHBETTEOTTERTHEEI',
+        acrossClues: [
+          { number: 1, clue: "Literally Agnes" },
+          { number: 6, clue: "They crimp" },
+          { number: 7, clue: "Your mom" },
+          { number: 8, clue: "Adorable shell smashers" },
+          { number: 9, clue: "'Of ___ sing'" },
+        ],
+        downClues: [
+          { number: 1, clue: "Monastery head" },
+          { number: 2, clue: "Doth proceed" },
+          { number: 3, clue: "Night, in Napoli" },
+          { number: 4, clue: "First name in cosmetics" },
+          { number: 5, clue: "Rob Zombie wife ___ Moon" },
         ]
       }
     ]
@@ -307,6 +324,7 @@
         playSound('LOL');
 
         const successGraphic = document.getElementById('success-graphic');
+        successGraphic.style.display = '';
         successGraphic.classList.add('active');
 
         // Wait for the initial animation to finish,
@@ -335,8 +353,12 @@
       const roundDisplay = document.getElementById('round-counter');
       roundDisplay.innerText = `#${round + 1}`;
       mode = 0;
+
+      // Clear current selection first
+      toggleSelected(null);
       selected = null;
       focusNext(selected);
+
       startTimer();
     }
 
@@ -537,7 +559,7 @@
         timeDisplay.textContent = timeLeft;
 
         // Intensify screen shake as time decreases
-        if (countdown && (timeLeft <= 20 && timeLeft > 0)) {
+        if (countdown && (timeLeft <= 10 && timeLeft > 0)) {
           // Add screen shake class if not already applied
           if (!pageContainer.classList.contains('shake')) {
             pageContainer.classList.add('shake');
