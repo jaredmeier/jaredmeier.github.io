@@ -62,6 +62,29 @@
     <div id="success-graphic" class="success-hidden">
       <i class="fa-solid fa-star"></i>
     </div>
+    <div id="error-screen">
+      <div class="error-text">
+        ERROR ERROR ERROR ERROR ERROR
+      </div>
+    </div>
+    <div id="bday-screen">
+      <div class="bday-text mt-5">
+        <i class="fa-solid fa-otter"></i>
+        <i class="fa-solid fa-otter"></i>
+        THERE
+        <i class="fa-solid fa-otter"></i>
+        <i class="fa-solid fa-otter"></i>
+        IS
+        <i class="fa-solid fa-otter"></i>
+        <i class="fa-solid fa-otter"></i>
+        NO
+        <i class="fa-solid fa-otter"></i>
+        <i class="fa-solid fa-otter"></i>
+        MORE
+        <i class="fa-solid fa-otter"></i>
+        <i class="fa-solid fa-otter"></i>
+      </div>
+    </div>
   </div>
 
 
@@ -69,6 +92,7 @@
     const SOUNDS = {
       LOL: '../brrrup/lol.wav',
       ERROR: '../brrrup/error.wav',
+      BDAY: '../brrrup/birthday.wav',
     };
 
     const puzzles = [
@@ -83,7 +107,7 @@
         ],
         downClues: [
           { number: 1, clue: "Grape spirit" },
-          { number: 2, clue: "Where ORs are" },
+          { number: 2, clue: "Where MDs triage" },
           { number: 3, clue: "PC progenitor" },
           { number: 4, clue: "Slice for a Wu-Tang member?" },
           { number: 5, clue: "Bull without balls" },
@@ -110,9 +134,9 @@
         correctAnswers: 'AGNESBOOSHBETTEOTTERTHEEI',
         acrossClues: [
           { number: 1, clue: "Literally Agnes" },
-          { number: 6, clue: "They crimp" },
+          { number: 6, clue: "In it they crimp" },
           { number: 7, clue: "Your mom" },
-          { number: 8, clue: "Adorable shell smashers" },
+          { number: 8, clue: "Adorable shell smasher" },
           { number: 9, clue: "'Of ___ sing'" },
         ],
         downClues: [
@@ -332,11 +356,16 @@
         // then start next round
         setTimeout(() => {
           successGraphic.classList.add('fade-out');
-          startNextRound();
+          if (round === 2) {
+            showBdayScreen();
+          } else {
+            startNextRound();
+          }
 
           setTimeout(() => {
             successGraphic.classList.remove('active', 'fade-out');
             successGraphic.style.display = 'none';
+
           }, 700);
         }, 2000);
       } else {
@@ -543,9 +572,21 @@
             TIMER + SHAKING BUSINESS
     ------
     */
+    function showErrorScreen() {
+      document.getElementById('error-screen').style.display = 'block';
+      playSound('ERROR');
+      setInterval(() => playSound('ERROR'), 800);
+      setTimeout(() => location.reload(), 5000);
+    }
+
+    function showBdayScreen() {
+      document.getElementById('bday-screen').style.display = 'block';
+      playSound('BDAY');
+    }
+
     function startTimer() {
       countdown = true;
-      let timeLeft = 60;  // Set the timer duration (in seconds)
+      let timeLeft = 90;  // Set the timer duration (in seconds)
       const timeDisplay = document.getElementById('time');
       timeDisplay.textContent = timeLeft;
       const pageContainer = document.querySelector('.page-container');
@@ -584,6 +625,7 @@
           clearInterval(shakeInterval);
           pageContainer.classList.remove('shake');
           pageContainer.style.transform = 'none';  // Stop shaking
+          if (timeLeft === 0) showErrorScreen();
         }
 
       }, 1000);
@@ -664,7 +706,6 @@
       })
     };
 
-    // inputAnswers();
     startTimer();
   </script>
 </body>

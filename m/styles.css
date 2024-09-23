@@ -324,8 +324,53 @@ body {
   }
 }
 
-.fa-otter {
+#bouncing-otter {
   font-size: 2rem;
   animation: move-horizontal 4s infinite ease-in-out;
   margin-left: 10px;
+}
+
+#error-screen {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 0, 0, 0.9);
+  /* Semi-transparent red background */
+  z-index: 9999;
+  /* Ensure it covers everything */
+  color: white;
+  text-align: center;
+  overflow: hidden;
+}
+
+#error-screen .error-text {
+  font-size: 7rem;
+  font-weight: bold;
+  color: black;
+  animation: shake 0.2s infinite alternate;
+}
+
+#bday-screen {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #62466b;
+  opacity: .95;
+  z-index: 999;
+  text-align: center;
+  overflow: hidden;
+  font-size: 4rem;
+  font-weight: bold;
+}
+
+#bday-screen .bday-text .fa-otter {
+  font-size: 6rem;
+  font-weight: bold;
+  animation: shake 3s infinite alternate;
 }
