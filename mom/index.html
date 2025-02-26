@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy 70th Birthday!</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #fdf6e3;
+      color: #3d2c2e;
+      font-family: 'Merriweather', serif;
+    }
+
+    .swiper {
+      width: 100%;
+      height: 100vh;
+    }
+
+    .swiper-slide {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      height: 90%;
+      background-color: rgba(248, 241, 228, 0.8);
+      /* Slight transparency */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 16px;
+      margin: 20px 0;
+      /* Adds margin above and below slides */
+      position: relative;
+      /* Ensures absolute positioning works */
+    }
+
+    .swiper-button-prev,
+    .swiper-button-next {
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      background: none;
+      /* Removed background */
+      border-radius: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #3d2c2e;
+      /* Matches text color */
+    }
+
+    .swiper-button-prev {
+      left: 5%;
+    }
+
+    .swiper-button-next {
+      right: 5%;
+    }
+
+    /* Background Flower Images */
+    .background-flower {
+      position: absolute;
+      opacity: 0.6;
+      width: 250px;
+      height: auto;
+      z-index: -1;
+      /* Ensures they stay behind the slides */
+    }
+
+    .flower-1 {
+      top: 1%;
+      right: 33%;
+      transform: rotate(10deg);
+      width: 260px;
+    }
+
+    .flower-2 {
+      top: 50%;
+      right: 10%;
+      transform: rotate(15deg);
+    }
+
+    .flower-3 {
+      bottom: 17%;
+      left: 10%;
+      width: 290px;
+      transform: rotate(-5deg);
+    }
+
+    .flower-4 {
+      bottom: -20%;
+      right: 18%;
+      transform: rotate(10deg);
+      width: 275px;
+    }
+
+    .fa-hand-pointer {
+      font-size: 4rem;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+  <!-- Background Flower Images -->
+  <img src="flower_1.png" class="background-flower flower-1">
+  <!-- <img src="flower_2.png" class="background-flower flower-2"> -->
+  <img src="flower_3.png" class="background-flower flower-3">
+  <img src="flower_4.png" class="background-flower flower-4">
+
+  <div class="swiper">
+    <div class="swiper-wrapper">
+      <!-- Slide 1: Welcome -->
+      <div class="swiper-slide flex flex-col items-center justify-center p-8">
+        <h1 class="text-4xl font-bold">Happy Birthday</h1>
+        <p class="text-lg mt-20"><i class="fas fa-hand-pointer"></i></p>
+      </div>
+
+      <!-- Slide 2: Image Grid Selection -->
+      <div class="swiper-slide flex flex-col items-center justify-center p-8">
+        <h2 class="text-2xl font-bold mb-4">Pick Your Favorite Flowers</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <img src="flower_1.png" class="selectable w-32 h-32 rounded-md cursor-pointer">
+          <img src="flower_2.png" class="selectable w-32 h-32 rounded-md cursor-pointer">
+          <img src="flower_3.png" class="selectable w-32 h-32 rounded-md cursor-pointer">
+          <img src="flower_4.png" class="selectable w-32 h-32 rounded-md cursor-pointer">
+        </div>
+      </div>
+
+      <!-- Slide 3: Message -->
+      <div class="swiper-slide flex flex-col items-center justify-center p-8">
+        <h2 class="text-2xl font-bold mb-4">A Special Message</h2>
+        <p class="text-lg">You inspire everyone around you. Here's to many more wonderful years!</p>
+      </div>
+    </div>
+
+    <!-- Swiper Pagination & Navigation -->
+    <div class="swiper-pagination"></div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+  </div>
+
+  <script>
+    const swiper = new Swiper('.swiper', {
+      direction: 'horizontal',
+      loop: false,
+      allowTouchMove: true,
+      pagination: {
+        el: '.swiper-pagination',
+        type: 'bullets',
+        clickable: true,
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      slidesPerView: 1.5, // Shows a bit of the previous/next slides
+      centeredSlides: true, // Centers the active slide
+      spaceBetween: 50, // Adds space between slides
+    });
+
+    document.querySelectorAll('.selectable').forEach(img => {
+      img.addEventListener('click', function () {
+        this.classList.toggle('border-4');
+        this.classList.toggle('border-green-500');
+      });
+    });
+
+    gsap.from("h1", { opacity: 0, y: -20, duration: 1 });
+  </script>
+</body>
+
+</html>
