@@ -14,6 +14,7 @@
       background-color: #fdf6e3;
       color: #3d2c2e;
       font-family: 'Merriweather', serif;
+      transition: background-color 1s ease, color 1s ease;
     }
 
     .swiper {
@@ -28,13 +29,11 @@
       border-radius: 12px;
       height: 90%;
       background-color: rgba(248, 241, 228, 0.8);
-      /* Slight transparency */
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       padding: 16px;
       margin: 20px 0;
-      /* Adds margin above and below slides */
       position: relative;
-      /* Ensures absolute positioning works */
+      transition: background-color 1s ease;
     }
 
     .swiper-button-prev,
@@ -44,13 +43,11 @@
       width: 40px;
       height: 40px;
       background: none;
-      /* Removed background */
       border-radius: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #3d2c2e;
-      /* Matches text color */
     }
 
     .swiper-button-prev {
@@ -68,7 +65,6 @@
       width: 250px;
       height: auto;
       z-index: -1;
-      /* Ensures they stay behind the slides */
     }
 
     .flower-1 {
@@ -101,6 +97,37 @@
     .fa-hand-pointer {
       font-size: 4rem;
     }
+
+    /* Broadway Theme for Slide 3 and Beyond */
+    .broadway-theme {
+      background-color: #1a1a1a !important;
+      color: #ffd700 !important;
+    }
+
+    .broadway-border {
+      position: relative;
+      padding: 20px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 12px solid transparent;
+      box-shadow: 0 0 15px #ffd700, 0 0 30px #ff4500, 0 0 45px #ffd700;
+      animation: flashingLights 0.5s infinite alternate;
+    }
+
+    @keyframes flashingLights {
+      0% {
+        box-shadow: 0 0 15px #ffd700, 0 0 30px #ff4500, 0 0 45px #ffd700;
+      }
+
+      100% {
+        box-shadow: 0 0 25px #ff4500, 0 0 40px #ffd700, 0 0 55px #ff4500;
+      }
+    }
+
+    .text-outlined {
+      -webkit-text-stroke: 1px black;
+      /* text-stroke: 2px black; */
+    }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -117,8 +144,8 @@
     <div class="swiper-wrapper">
       <!-- Slide 1: Welcome -->
       <div class="swiper-slide flex flex-col items-center justify-center p-8">
-        <h1 class="text-4xl font-bold">Happy Birthday</h1>
-        <p class="text-lg mt-20"><i class="fas fa-hand-pointer"></i></p>
+        <h1 class="text-4xl font-bold">Happy 70th Birthday, Mom!</h1>
+        <p class="text-lg mt-4"><i class="fas fa-hand-pointer"></i></p>
       </div>
 
       <!-- Slide 2: Image Grid Selection -->
@@ -132,10 +159,16 @@
         </div>
       </div>
 
-      <!-- Slide 3: Message -->
-      <div class="swiper-slide flex flex-col items-center justify-center p-8">
-        <h2 class="text-2xl font-bold mb-4">A Special Message</h2>
-        <p class="text-lg">You inspire everyone around you. Here's to many more wonderful years!</p>
+      <!-- Slide 3: Broadway Theme Activated -->
+      <div class="swiper-slide flex flex-col items-center justify-center p-8 broadway-slide">
+        <h2 class="text-3xl font-bold mb-4 text-outlined">BROADWAY</h2>
+        <p class="text-xl text-outlined">But now it's time to throw caution to the wind!</p>
+        <div class="grid grid-cols-2 gap-8 mt-8 items-center">
+          <img src="book.jpg" class="selectable w-32 rounded-md cursor-pointer">
+          <img src="hadestown.png" class="selectable w-32 rounded-md cursor-pointer">
+          <img src="horrors.webp" class="selectable w-32 rounded-md cursor-pointer">
+          <img src="moulin.jpg" class="selectable w-32 rounded-md cursor-pointer">
+        </div>
       </div>
     </div>
 
@@ -159,19 +192,21 @@
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev',
       },
-      slidesPerView: 1.5, // Shows a bit of the previous/next slides
-      centeredSlides: true, // Centers the active slide
-      spaceBetween: 50, // Adds space between slides
+      slidesPerView: 1.5,
+      centeredSlides: true,
+      spaceBetween: 50,
+      on: {
+        slideChange: function () {
+          if (this.activeIndex >= 2) {
+            document.body.classList.add('broadway-theme');
+            document.querySelector('.broadway-slide').classList.add('broadway-border');
+          } else {
+            document.body.classList.remove('broadway-theme');
+            document.querySelector('.broadway-slide').classList.remove('broadway-border');
+          }
+        }
+      }
     });
-
-    document.querySelectorAll('.selectable').forEach(img => {
-      img.addEventListener('click', function () {
-        this.classList.toggle('border-4');
-        this.classList.toggle('border-green-500');
-      });
-    });
-
-    gsap.from("h1", { opacity: 0, y: -20, duration: 1 });
   </script>
 </body>
 
