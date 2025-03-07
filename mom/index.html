@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy 70th Birthday!</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+  <link rel="stylesheet" type="text/css" href="./styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #fdf6e3;
+      color: #3d2c2e;
+      font-family: 'Merriweather', serif;
+      transition: background-color 1s ease, color 1s ease;
+    }
+
+    .swiper {
+      width: 100%;
+      height: 100vh;
+    }
+
+    .swiper-slide {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      height: 90%;
+      background-color: rgba(248, 241, 228, 0.8);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 16px;
+      margin: 20px 0;
+      position: relative;
+      transition: background-color 1s ease;
+    }
+
+    .swiper-button-prev,
+    .swiper-button-next {
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      background: none;
+      border-radius: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #3d2c2e;
+    }
+
+    .swiper-button-prev {
+      left: 8%;
+    }
+
+    .swiper-button-next {
+      right: 8%;
+    }
+
+    /* Background Flower Images */
+    .background-flower {
+      position: absolute;
+      opacity: 0.6;
+      width: 250px;
+      height: auto;
+      z-index: -1;
+      transition: all 2s;
+    }
+
+    .flower-1 {
+      top: 1%;
+      right: 33%;
+      transform: rotate(10deg);
+      width: 260px;
+    }
+
+    .flower-2 {
+      top: 50%;
+      right: 10%;
+      transform: rotate(15deg);
+    }
+
+    .flower-3 {
+      bottom: 17%;
+      left: 10%;
+      width: 290px;
+      transform: rotate(-5deg);
+    }
+
+    .flower-4 {
+      bottom: -20%;
+      right: 18%;
+      transform: rotate(10deg);
+      width: 275px;
+    }
+
+    .fa-hand-pointer {
+      font-size: 4rem;
+    }
+
+    /* Broadway Theme for Slide 3 and Beyond */
+    .broadway-theme {
+      background-color: #1a1a1a !important;
+      color: #ffd700 !important;
+    }
+
+    .broadway-slide {
+      font-family: 'Monoton', cursive;
+      /* font-family: "Limelight", sans-serif; */
+      font-weight: 400;
+      font-style: normal;
+      background-color: black;
+    }
+
+    .broadway-border {
+      position: relative;
+      padding: 20px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 12px solid transparent;
+      box-shadow: 0 0 15px #ffd700, 0 0 30px #ff4500, 0 0 45px #ffd700;
+      animation: flashingLights ease-in 0.2s infinite alternate;
+    }
+
+    @keyframes flashingLights {
+      0% {
+        box-shadow: 0 0 15px #ffd700, 0 0 30px #ff4500, 0 0 45px #ffd700;
+      }
+
+      100% {
+        box-shadow: 0 0 25px #ff4500, 0 0 40px #ffd700, 0 0 55px #ff4500;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+  <!-- Background Flower Images -->
+  <img src="flower_1.png" class="background-flower flower-1">
+  <!-- <img src="flower_2.png" class="background-flower flower-2"> -->
+  <img src="flower_3.png" class="background-flower flower-3">
+  <img src="flower_4.png" class="background-flower flower-4">
+
+  <div class="swiper">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide flex flex-col items-center justify-center p-8">
+        <h1 class="text-5xl mb-10 font-bold text-center">Happy 70th Birthday, Mom!</h1>
+        <p class="text-sm mt-10 ml-[-1em]"><i class="fas fa-hand-pointer"></i></p>
+        <p class="text-sm mt-2">(swipe)</i></p>
+      </div>
+
+      <div class="swiper-slide flex flex-col items-center justify-center p-8">
+        <h2 class="text-4xl font-bold mb-4">70 is a big number.</h2>
+        <p class="text-3xl p-10">But <b>2</b> is not. That’s how many times older than me you
+          are. That’s a much smaller number than where
+          we started (see graph on next slide).</p>
+      </div>
+
+      <div class="swiper-slide flex flex-col items-center justify-center p-8">
+        <img src="graph.png" class="">
+      </div>
+
+      <div class="swiper-slide flex flex-col items-center justify-center p-8">
+        <p class="text-3xl p-10">Now that we are approaching an age ratio more appropriate for peers, it's time for me
+          to leave behind the bundles of flowers
+          and instead give you the same kind of gift I like to give my friends.
+        </p>
+      </div>
+
+      <div class="swiper-slide flex flex-col items-center justify-center p-8">
+        <p class="text-3xl p-10">Such as...
+        </p>
+      </div>
+
+      <div class="swiper-slide flex flex-col items-center justify-center p-8 broadway-slide">
+        <h3 class="text-5xl text-center mb-4 leading-[3.3rem]">A NIGHT OUT</h3>
+        <h3 class="text-4xl m-5">on</h3>
+        <h1 class="text-7xl mt-3 font-bold title">BROADWAY</h1>
+      </div>
+
+      <div class="swiper-slide flex flex-col items-center justify-center p-8 broadway-slide">
+        <div class="grid grid-cols-2 gap-8 items-center">
+          <div class="poster bg-[url('hadestown.png')] w-32"></div>
+          <div class="poster bg-[url('book.jpg')] w-32"></div>
+          <div class="poster bg-[url('horrors.webp')] w-32"></div>
+          <div class="poster bg-[url('moulin.jpg')] w-32"></div>
+        </div>
+        <h1 class="text-4xl font-bold mt-10 text-center">THERE ARE SO MANY CHOICES!</h1>
+      </div>
+
+      <div class="swiper-slide flex flex-col items-center justify-center p-8 broadway-slide">
+        <h1 class="text-5xl font-bold mb-4 text-center">THEY GO ON AND ON!</h1>
+        <div class="grid grid-cols-2 gap-8 mt-8 items-center">
+          <div class="poster poster-big bg-[url('chicago.webp')] w-32"></div>
+          <div class="poster poster-big bg-[url('dorian.jpg')] w-32"></div>
+          <div class="poster poster-big bg-[url('redwood.jpg')] w-32"></div>
+          <div class="poster poster-big bg-[url('wicked.webp')] w-32"></div>
+        </div>
+      </div>
+
+      <div class="swiper-slide flex flex-col items-center justify-center p-8">
+        <h1 class="text-5xl font-bold mb-8">Actually that's it.</h1>
+        <p class="text-xl text-center">All the good ones anyway.</h1>
+      </div>
+
+      <div class="swiper-slide flex flex-col items-center justify-center p-8 broadway-slide">
+        <h1 class="text-5xl font-bold mb-4 text-center">BUT TO ANY ONE OF THOSE WONDERFUL SHOWS, YOU AND ONE OTHER LUCKY
+          PERSON ARE INVITED!
+        </h1>
+        <img src="two-tickets.png" class="mt-10 max-w-[30%] rotate-[10deg] ml-[-3rem]">
+      </div>
+
+      <div class="swiper-slide flex flex-col items-center justify-center p-8 broadway-slide">
+        <img src="dinner.png" class="max-w-[60%] inverted">
+        <h1 class="text-4xl font-bold mt-4 p-10 text-center">AND OF COURSE YOU DO NOT GO TO THE THEATER ON AN EMPTY
+          STOMACH, SO IT IS IMPORTANT TO
+          ARRIVE EARLY AND HUNGRY.</h1>
+      </div>
+    </div>
+  </div>
+
+  <!-- Swiper Pagination & Navigation -->
+  <div class=" swiper-pagination">
+  </div>
+  <div class="swiper-button-prev"></div>
+  <div class="swiper-button-next"></div>
+  </div>
+
+  <script>
+    let signOn = false;
+    const swiper = new Swiper('.swiper', {
+      direction: 'horizontal',
+      loop: false,
+      allowTouchMove: true,
+      pagination: {
+        el: '.swiper-pagination',
+        type: 'bullets',
+        clickable: true,
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      slidesPerView: 1.3,
+      centeredSlides: true,
+      spaceBetween: 50,
+      on: {
+        slideChange: function () {
+          if (this.slides[this.activeIndex].classList.contains('broadway-slide')) {
+            document.body.classList.add('broadway-theme');
+            this.slides[this.activeIndex].classList.add('broadway-border');
+            document.querySelectorAll('.background-flower').forEach((e) => e.classList.add('inverted'));
+            turnOnSign();
+          } else {
+            document.body.classList.remove('broadway-theme');
+            document.querySelectorAll('.background-flower').forEach((e) => e.classList.remove('inverted'));
+            document.querySelectorAll('.broadway-slide').forEach((e) => e.classList.remove('broadway-border'));
+            turnOffSign();
+            document.querySelectorAll('.broadway-slide .title span').forEach((e) => {
+              e.style.color = 'black';
+              e.style.animation = "none";
+            });
+          }
+        }
+      }
+    });
+
+    const turnOffSign = () => {
+      document.querySelectorAll('.broadway-slide .title span').forEach((e) => {
+        e.style.color = 'black';
+        e.style.animation = "none";
+      });
+      signOn = false;
+    }
+
+    const turnOnSign = () => {
+      if (signOn) return;
+      const sign = document.querySelector('.broadway-slide .title');
+
+      const flickerLetter = (letter) => `<span style="animation: text-flicker-in-glow ${Math.random() * 4}s linear both ">${letter}</span>`
+      const colorLetter = (letter) => `<span style="color: hsla(${Math.random() * 360}, 100%, 80%, 1);">${letter}</span>`;
+      const flickerAndColorText = (text) =>
+        text
+          .split('')
+          .map(flickerLetter)
+          .map(colorLetter)
+          .join('');
+      const neonGlory = (target) => target.innerHTML = flickerAndColorText(target.textContent);
+
+      neonGlory(sign);
+      sign.onclick = ({ target }) => neonGlory(target);
+      signOn = true;
+    };
+  </script>
+</body>
+
+</html>
