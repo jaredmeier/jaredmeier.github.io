@@ -179,7 +179,7 @@
       <div class="swiper-slide flex flex-col items-center justify-center p-8 broadway-slide">
         <h3 class="text-5xl text-center mb-4 leading-[3.3rem]">A NIGHT OUT</h3>
         <h3 class="text-4xl m-5">on</h3>
-        <h1 class="text-8xl mt-10 title">BROADWAY</h1>
+        <h1 class="md:text-6xl lg:text-8xl mt-10 title">BROADWAY</h1>
       </div>
 
       <div class="swiper-slide flex flex-col items-center justify-center p-8 broadway-slide">
@@ -219,6 +219,28 @@
         <h1 class="text-4xl font-bold mt-4 p-10 text-center">AND OF COURSE YOU DO NOT GO TO THE THEATER ON AN EMPTY
           STOMACH, SO IT IS IMPORTANT TO
           ARRIVE EARLY AND HUNGRY.</h1>
+      </div>
+
+      <div class="swiper-slide flex flex-col items-center justify-center p-8 broadway-slide">
+        <div class="grid grid-cols-2 items-center">
+          <img src="lady.png" class="max-w-[70%] justify-self-center inverted">
+          <div>
+            <p class="text-5xl pb-10 pt-10">So...</p>
+            <ul class="text-3xl">
+              <li class="pb-4">*&nbsp;&nbsp;&nbsp;PICK A SHOW</li>
+              <li class="pb-4">*&nbsp;&nbsp;&nbsp;PICK A DAY</li>
+              <li class="pb-4">*&nbsp;&nbsp;&nbsp;PICK A PLUS ONE</li>
+              <li class="pb-4">*&nbsp;&nbsp;&nbsp;COMB YOUR HAIR</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="swiper-slide flex flex-col items-center justify-center p-8">
+        <p class="text-3xl p-10">If it seems extravagant, that's because it is. But only slightly – it's nothing
+          compared to being a mother! Happy birthday.
+        </p>
+        <p class="text-3xl p-10 self-end me-10">Love, Jared</p>
       </div>
     </div>
   </div>
@@ -270,10 +292,6 @@
     });
 
     const turnOffSign = () => {
-      // document.querySelectorAll('.broadway-slide .title span').forEach((e) => {
-      //   e.style.color = 'black';
-      //   e.style.animation = "none";
-      // });
       const sign = document.querySelector('.broadway-slide .title');
       sign.classList.remove('neon');
       sign.style.animation = 'none';
@@ -287,18 +305,6 @@
       sign.classList.add('neon');
       sign.style.animation = `text-flicker-in-glow ${Math.random() * 4}s linear both`;
 
-      // const flickerLetter = (letter) => `<span style="animation: text-flicker-in-glow ${Math.random() * 4}s linear both ">${letter}</span>`
-      // const colorLetter = (letter) => `<span style="color: hsla(${Math.random() * 360}, 100%, 80%, 1);">${letter}</span>`;
-      // const flickerAndColorText = (text) =>
-      //   text
-      //     .split('')
-      //     .map(flickerLetter)
-      //     .map(colorLetter)
-      //     .join('');
-      // const neonGlory = (target) => target.innerHTML = flickerAndColorText(target.textContent);
-
-      // neonGlory(sign);
-      // sign.onclick = ({ target }) => neonGlory(target);
       signOn = true;
     };
   </script>
