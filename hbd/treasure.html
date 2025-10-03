@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>HUNT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background: #1b1b1b url('https://www.transparenttextures.com/patterns/aged-paper.png');
+      font-family: 'Treasure Map Deadhand', cursive, serif;
+      color: #f4e1c1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 8px #000;
+    }
+
+    input {
+      padding: 0.6rem;
+      font-size: 1.2rem;
+      border: 2px solid #c2a87c;
+      border-radius: 6px;
+      background: #2b2b2b;
+      color: #f4e1c1;
+      text-align: center;
+      width: 80%;
+      max-width: 300px;
+      transition: border-color 0.3s;
+    }
+
+    input.error {
+      border-color: red;
+      animation: shake 0.3s;
+    }
+
+    @keyframes shake {
+      0% {
+        transform: translateX(0);
+      }
+
+      25% {
+        transform: translateX(-6px);
+      }
+
+      50% {
+        transform: translateX(6px);
+      }
+
+      75% {
+        transform: translateX(-6px);
+      }
+
+      100% {
+        transform: translateX(0);
+      }
+    }
+
+    .clue {
+      opacity: 0;
+      margin-top: 1.5rem;
+      font-size: 1.2rem;
+      max-width: 300px;
+      line-height: 1.4;
+      transition: opacity 3s ease-in;
+    }
+
+    .clue.visible {
+      opacity: 1;
+    }
+
+    /* Balloon/confetti */
+    .balloon {
+      position: fixed;
+      bottom: -100px;
+      width: 40px;
+      height: 60px;
+      background: red;
+      border-radius: 50% 50% 50% 50%;
+      animation: rise 6s linear forwards;
+      z-index: 100;
+    }
+
+    @keyframes rise {
+      to {
+        transform: translateY(-120vh) rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Enter the Secret Key</h1>
+  <input id="codeInput" type="text" placeholder="••••••" />
+
+  <div id="clueBox" class="clue"></div>
+
+  <script>
+    // 🗝️ Dictionary of codes -> clues
+    const clues = {
+      "map1": "The treasure lies where the shadows meet at dusk.",
+      "key2": "Seek the place of laughter, beneath the old oak tree.",
+      "gem3": "Follow the whisper of the wind to the hidden stone.",
+      "finale": "🎉 Happy Birthday, Adventurer! 🎉"
+    };
+
+    const input = document.getElementById('codeInput');
+    const clueBox = document.getElementById('clueBox');
+
+    input.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        const code = input.value.trim();
+        if (clues[code]) {
+          clueBox.textContent = clues[code];
+          clueBox.classList.remove('visible');
+          void clueBox.offsetWidth; // restart animation trick
+          clueBox.classList.add('visible');
+
+          if (code === 'finale') {
+            launchBalloons();
+          }
+
+          input.value = '';
+        } else {
+          input.classList.add('error');
+          setTimeout(() => input.classList.remove('error'), 500);
+        }
+      }
+    });
+
+    function launchBalloons() {
+      for (let i = 0; i < 20; i++) {
+        const balloon = document.createElement('div');
+        balloon.classList.add('balloon');
+        balloon.style.left = Math.random() * 100 + 'vw';
+        balloon.style.background = `hsl(${Math.random() * 360},70%,60%)`;
+        balloon.style.animationDuration = 4 + Math.random() * 3 + 's';
+        document.body.appendChild(balloon);
+        setTimeout(() => balloon.remove(), 7000);
+      }
+    }
+  </script>
+</body>
+
+</html>
