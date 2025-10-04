@@ -90,21 +90,109 @@
       opacity: 1;
     }
 
-    /* Balloon/confetti */
-    .balloon {
+    /* SPECTACULAR FIREWORKS DISPLAY */
+    #fireworks-canvas {
       position: fixed;
-      bottom: -100px;
-      width: 40px;
-      height: 60px;
-      background: red;
-      border-radius: 50% 50% 50% 50%;
-      animation: rise 6s linear forwards;
-      z-index: 100;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1000;
+      background: transparent;
     }
 
-    @keyframes rise {
-      to {
-        transform: translateY(-120vh) rotate(360deg);
+    /* Screen shake effect */
+    @keyframes screenShake {
+
+      0%,
+      100% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+
+      10% {
+        transform: translate(-8px, -3px) rotate(-1deg);
+      }
+
+      20% {
+        transform: translate(-5px, 0px) rotate(1deg);
+      }
+
+      30% {
+        transform: translate(5px, 3px) rotate(0deg);
+      }
+
+      40% {
+        transform: translate(2px, -2px) rotate(1deg);
+      }
+
+      50% {
+        transform: translate(-2px, 3px) rotate(-1deg);
+      }
+
+      60% {
+        transform: translate(-5px, 2px) rotate(0deg);
+      }
+
+      70% {
+        transform: translate(5px, 2px) rotate(-1deg);
+      }
+
+      80% {
+        transform: translate(-2px, -2px) rotate(1deg);
+      }
+
+      90% {
+        transform: translate(2px, 3px) rotate(0deg);
+      }
+    }
+
+    .shake {
+      animation: screenShake 0.8s ease-in-out;
+    }
+
+    /* Celebration text */
+    .celebration-text {
+      position: fixed;
+      top: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 5rem;
+      font-weight: bold;
+      color: #ffd700;
+      text-shadow:
+        0 0 10px #ffd700,
+        0 0 20px #ffd700,
+        0 0 40px #ffd700,
+        0 0 80px #ff6b6b,
+        0 0 100px #ff6b6b;
+      animation: celebrationPulse 1.5s ease-in-out infinite;
+      z-index: 1500;
+      pointer-events: none;
+      text-align: center;
+    }
+
+    @keyframes celebrationPulse {
+
+      0%,
+      100% {
+        transform: translateX(-50%) scale(1);
+        text-shadow:
+          0 0 10px #ffd700,
+          0 0 20px #ffd700,
+          0 0 40px #ffd700,
+          0 0 80px #ff6b6b;
+      }
+
+      50% {
+        transform: translateX(-50%) scale(1.05);
+        text-shadow:
+          0 0 20px #ffd700,
+          0 0 40px #ffd700,
+          0 0 60px #ffd700,
+          0 0 100px #ff6b6b,
+          0 0 120px #ff6b6b,
+          0 0 140px #4ecdc4;
       }
     }
   </style>
@@ -116,6 +204,7 @@
 
   <div id="clueBox" class="clue"></div>
 
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
   <script>
     // 🗝️ Dictionary of codes -> clues
     // Questions –  
@@ -123,19 +212,47 @@
     // what is the name of the building they live in in Rosemary’s Baby?
     // what was the name of the hot lesbian at moan and dove whom we often admired?
     const clues = {
-      "heat miser": "Near a place you know and love\n(where once a love was observed),\nthere is a chapel or something like,\nthat both shades from sun,\nand stages rave music all eve long,\nand holds by its side a key\nfor your adventure.",
+      "heat miser": "Near a place you know and love\n(where once a love was observed),\nthere is a chapel or something like,\nthat both shades from sun\nand stages rave music all eve long,\nand holds by its side a key\nfor your adventure.",
       "bramford": "I hear tell there is a place\nwhere you have rolled butt over face.\nIn fact it’s true, I have heard,\nin more than one sense of the word.\nAnd near this spot of mirth and glee,\na guard stands before the trees\nto keep your next prize safe and sound,\nuntil its bounty you have found.",
       "molly": "There is a place where people play,\nthey smash those balls about all day!\nWe sit and watch them flail and writhe\nuntil proud nature’s call arrives!\nWe sneak into the leaves behind,\nand what fair treasure do we find?\nA wooden corpse that stands no more,\nyour key and prize are in its store.",
-      "finale": "🎉 You have reached the end!\nNow time to celebrate!!!??? 🎉"
+      "cheese": "Now go home.\nOr back to the others. To celebrate!"
     };
+
+    // Create an array of clue keys for fuzzy searching
+    const clueKeys = Object.keys(clues);
+
+    // Configure Fuse.js options for fuzzy matching
+    const fuseOptions = {
+      includeScore: true,
+      threshold: 0.4, // Lower = more strict, higher = more fuzzy (0.0 = perfect match, 1.0 = match anything)
+      distance: 100,   // Maximum allowed distance for a match
+      minMatchCharLength: 2,
+      ignoreLocation: true
+    };
+
+    // Create Fuse instance
+    const fuse = new Fuse(clueKeys, fuseOptions);
 
     const input = document.getElementById('codeInput');
     const clueBox = document.getElementById('clueBox');
 
     input.addEventListener('keypress', function (e) {
       if (e.key === 'Enter') {
-        const code = input.value.trim();
-        if (clues[code]) {
+        const userInput = input.value.trim();
+
+        // Try fuzzy search first
+        const searchResults = fuse.search(userInput);
+        let matchedKey = null;
+
+        if (searchResults.length > 0 && searchResults[0].score <= 0.4) {
+          // Found a good fuzzy match
+          matchedKey = searchResults[0].item;
+        } else {
+          // Fallback to exact match (case insensitive)
+          matchedKey = clueKeys.find(key => key.toLowerCase() === userInput.toLowerCase());
+        }
+
+        if (matchedKey && clues[matchedKey]) {
           // Set opacity to 0 immediately (no transition)
           clueBox.style.transition = 'none';
           clueBox.style.opacity = '0';
@@ -144,7 +261,7 @@
           void clueBox.offsetWidth;
 
           // Update text content
-          clueBox.textContent = clues[code];
+          clueBox.textContent = clues[matchedKey];
 
           // Re-enable transition and fade in
           requestAnimationFrame(() => {
@@ -152,7 +269,7 @@
             clueBox.style.opacity = '1';
           });
 
-          if (code === 'finale') {
+          if (matchedKey === 'cheese') {
             launchBalloons();
           }
 
@@ -165,14 +282,231 @@
     });
 
     function launchBalloons() {
-      for (let i = 0; i < 20; i++) {
-        const balloon = document.createElement('div');
-        balloon.classList.add('balloon');
-        balloon.style.left = Math.random() * 100 + 'vw';
-        balloon.style.background = `hsl(${Math.random() * 360},70%,60%)`;
-        balloon.style.animationDuration = 4 + Math.random() * 3 + 's';
-        document.body.appendChild(balloon);
-        setTimeout(() => balloon.remove(), 7000);
+      // Create canvas for fireworks
+      const canvas = document.createElement('canvas');
+      canvas.id = 'fireworks-canvas';
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      document.body.appendChild(canvas);
+
+      const ctx = canvas.getContext('2d');
+
+      // Screen shake effect
+      document.body.classList.add('shake');
+      setTimeout(() => document.body.classList.remove('shake'), 800);
+
+      // Celebration text
+      const celebrationText = document.createElement('div');
+      celebrationText.classList.add('celebration-text');
+      // celebrationText.innerHTML = '� CONGRATULATIONS! <br><span style="font-size: 0.6em; color: #4ecdc4;">TREASURE FOUND!</span>';
+      document.body.appendChild(celebrationText);
+
+      // Fireworks animation variables
+      const fireworks = [];
+      const particles = [];
+      const colors = [
+        [255, 107, 107], // Red
+        [255, 215, 0],   // Gold  
+        [76, 236, 196],  // Turquoise
+        [255, 159, 243], // Pink
+        [84, 160, 255],  // Blue
+        [254, 202, 87],  // Orange
+        [150, 206, 180], // Green
+        [255, 105, 180], // Hot Pink
+        [138, 43, 226]   // Purple
+      ];
+
+      class Firework {
+        constructor(x, y) {
+          this.x = x;
+          this.y = y;
+          this.targetY = Math.random() * canvas.height * 0.4 + 50;
+          this.speed = Math.random() * 3 + 8;
+          this.acceleration = 1.02;
+          this.trail = [];
+          this.trailLength = 8;
+          this.exploded = false;
+          this.color = colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        update() {
+          if (!this.exploded) {
+            // Add to trail
+            this.trail.push({ x: this.x, y: this.y });
+            if (this.trail.length > this.trailLength) {
+              this.trail.shift();
+            }
+
+            // Move rocket up
+            this.y -= this.speed;
+            this.speed *= 0.99;
+
+            // Check if reached target height
+            if (this.y <= this.targetY || this.speed <= 1) {
+              this.explode();
+            }
+          }
+        }
+
+        explode() {
+          this.exploded = true;
+          const particleCount = Math.random() * 80 + 60;
+
+          for (let i = 0; i < particleCount; i++) {
+            const angle = (Math.PI * 2 * i) / particleCount;
+            const speed = Math.random() * 8 + 2;
+            particles.push(new Particle(
+              this.x,
+              this.y,
+              Math.cos(angle) * speed,
+              Math.sin(angle) * speed,
+              this.color
+            ));
+          }
+        }
+
+        draw() {
+          if (!this.exploded) {
+            ctx.save();
+
+            // Draw trail
+            for (let i = 0; i < this.trail.length; i++) {
+              const alpha = i / this.trail.length;
+              ctx.globalAlpha = alpha;
+              ctx.fillStyle = `rgb(${this.color[0]}, ${this.color[1]}, ${this.color[2]})`;
+              ctx.beginPath();
+              ctx.arc(this.trail[i].x, this.trail[i].y, 3 * alpha, 0, Math.PI * 2);
+              ctx.fill();
+            }
+
+            // Draw rocket
+            ctx.globalAlpha = 1;
+            ctx.fillStyle = `rgb(${this.color[0]}, ${this.color[1]}, ${this.color[2]})`;
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = `rgb(${this.color[0]}, ${this.color[1]}, ${this.color[2]})`;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+          }
+        }
+      }
+
+      class Particle {
+        constructor(x, y, vx, vy, color) {
+          this.x = x;
+          this.y = y;
+          this.vx = vx;
+          this.vy = vy;
+          this.color = color;
+          this.life = 1;
+          this.decay = Math.random() * 0.015 + 0.01;
+          this.size = Math.random() * 3 + 1;
+          this.gravity = 0.1;
+        }
+
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          this.vy += this.gravity;
+          this.vx *= 0.98;
+          this.vy *= 0.98;
+          this.life -= this.decay;
+          this.size *= 0.99;
+        }
+
+        draw() {
+          if (this.life > 0) {
+            ctx.save();
+            ctx.globalAlpha = this.life;
+            ctx.fillStyle = `rgb(${this.color[0]}, ${this.color[1]}, ${this.color[2]})`;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = `rgb(${this.color[0]}, ${this.color[1]}, ${this.color[2]})`;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
+        }
+      }
+
+      function animate() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Update and draw fireworks
+        for (let i = fireworks.length - 1; i >= 0; i--) {
+          fireworks[i].update();
+          fireworks[i].draw();
+
+          if (fireworks[i].exploded) {
+            fireworks.splice(i, 1);
+          }
+        }
+
+        // Update and draw particles
+        for (let i = particles.length - 1; i >= 0; i--) {
+          particles[i].update();
+          particles[i].draw();
+
+          if (particles[i].life <= 0) {
+            particles.splice(i, 1);
+          }
+        }
+      }
+
+      // Launch fireworks at intervals
+      let fireworkInterval;
+      let animationId;
+      let totalTime = 0;
+
+      function startFireworks() {
+        animationId = requestAnimationFrame(function frame() {
+          animate();
+          totalTime += 16;
+          if (totalTime < 10000) { // Run for 10 seconds
+            animationId = requestAnimationFrame(frame);
+          } else {
+            cleanup();
+          }
+        });
+
+        fireworkInterval = setInterval(() => {
+          if (totalTime < 9000) {
+            const x = Math.random() * canvas.width;
+            const y = canvas.height;
+            fireworks.push(new Firework(x, y));
+
+            // Sometimes launch multiple fireworks
+            if (Math.random() > 0.7) {
+              setTimeout(() => {
+                const x2 = Math.random() * canvas.width;
+                fireworks.push(new Firework(x2, canvas.height));
+              }, Math.random() * 500);
+            }
+          }
+        }, Math.random() * 400 + 200);
+      }
+
+      function cleanup() {
+        clearInterval(fireworkInterval);
+        cancelAnimationFrame(animationId);
+        setTimeout(() => {
+          canvas.remove();
+          celebrationText.remove();
+        }, 2000);
+      }
+
+      // Start the show!
+      startFireworks();
+
+      // Launch initial burst of fireworks
+      for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+          const x = Math.random() * canvas.width;
+          fireworks.push(new Firework(x, canvas.height));
+        }, i * 200);
       }
     }
   </script>
