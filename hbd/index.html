@@ -5,9 +5,14 @@
   <meta charset="UTF-8">
   <title>HUNT</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Limelight&family=Shadows+Into+Light&display=swap"
+    rel="stylesheet">
   <style>
     :root {
-      --clue-shadow-color: #2f3942;
+      --clue-shadow-color: #e2e2ec;
+      --font-color: black;
     }
 
     html,
@@ -21,8 +26,8 @@
     body {
       background: #1b1b1b url('grunge-paper-background.jpg') no-repeat center center fixed;
       background-size: cover;
-      font-family: 'Treasure Map Deadhand', cursive, serif;
-      color: #995700;
+      font-family: "Shadows Into Light", cursive;
+      color: var(--font-color);
       display: flex;
       justify-content: flex-start;
       align-items: center;
@@ -42,7 +47,7 @@
     input {
       padding: 0.6rem;
       font-size: 1.4rem;
-      font-family: 'Treasure Map Deadhand', cursive, serif;
+      font-family: "Shadows Into Light";
       border: 2px solid #c2a87c;
       border-radius: 6px;
       background: #2b2b2b;
@@ -90,20 +95,21 @@
     .clue {
       opacity: 0;
       margin-top: 5rem;
-      font-size: 1.3rem;
+      font-size: 1.4rem;
       max-width: 350px;
       line-height: 1.8;
       transition: opacity 3s ease-in;
       white-space: pre-wrap;
       text-align: left;
-      color: #c1e6f4;
-      font-weight: bold;
-      text-shadow:
+      color: var(--font-color);
+      /* text-transform: uppercase; */
+      /* font-weight: bold; */
+      /* text-shadow:
         -1px -1px 0 var(--clue-shadow-color),
-        1px -1px 0 var(--clue-shadow-color),
+        0px -0px 0 var(--clue-shadow-color),
         -1px 1px 0 var(--clue-shadow-color),
-        1px 1px 0 var(--clue-shadow-color),
-        0 0 4px var(--clue-shadow-color);
+        0px 0px 0 var(--clue-shadow-color),
+        0 0 4px var(--clue-shadow-color); */
     }
 
     .clue.visible {
@@ -220,7 +226,7 @@
 
 <body>
   <!-- <h1>Enter the Secret Key</h1> -->
-  <input id="codeInput" type="text" placeholder="••••••" />
+  <input id="codeInput" type="text" placeholder="*******" />
 
   <div id="clueBox" class="clue"></div>
 
@@ -233,9 +239,9 @@
     // what was the name of the hot lesbian at moan and dove whom we often admired?
     const clues = {
       "heat miser": "Near a place you know and love\n(where once a love was observed),\nthere is a chapel or something like,\nthat both shades from sun\nand stages rave music all eve long,\nand holds by its side a key\nfor your adventure.",
-      "bramford": "I hear tell there is a place\nwhere you have rolled butt over face.\nIn fact it’s true, I have heard,\nin more than one sense of the word.\nAnd near this spot of mirth and glee,\na guard stands before the trees\nto keep your next prize safe and sound,\nuntil its bounty you have found.",
-      "molly": "There is a place where people play,\nthey smash those balls about all day!\nWe sit and watch them flail and writhe\nuntil proud nature’s call arrives!\nWe sneak into the leaves behind,\nand what fair treasure do we find?\nA wooden corpse that stands no more,\nyour key and prize are in its store.",
-      "cheese": "Now go home.\nOr back to the others. To celebrate!"
+      "bramford": "I hear tell there is a place\nwhere you have rolled butt over face.\nIn fact it’s true, I have heard,\nin more than one sense of the word.\nAnd near this spot of mirth and glee,\na guard stands before the trees\nto keep your next prize safe & sound\nuntil its bounty you have found.",
+      "molly": "There is a place where people play,\nthey smash those balls about all day!\nWe sit and watch them flail & writhe\nuntil proud nature’s call arrives!\nWe sneak into the leaves behind,\nand what fair treasure do we find?\nA wooden corpse that stands no more,\nyour key and prize are in its store.",
+      "cheese": "Now go home.\nOr back to the others.\n\nTo celebrate!"
     };
 
     // Create an array of clue keys for fuzzy searching
@@ -296,6 +302,7 @@
           input.value = '';
           input.blur();
         } else {
+          input.value = '';
           input.classList.add('error');
           setTimeout(() => input.classList.remove('error'), 500);
         }
