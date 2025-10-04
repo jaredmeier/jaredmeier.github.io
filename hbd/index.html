@@ -6,6 +6,10 @@
   <title>HUNT</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    :root {
+      --clue-shadow-color: #2f3942;
+    }
+
     html,
     body {
       margin: 0;
@@ -18,12 +22,12 @@
       background: #1b1b1b url('grunge-paper-background.jpg') no-repeat center center fixed;
       background-size: cover;
       font-family: 'Treasure Map Deadhand', cursive, serif;
-      color: #f7ead3;
+      color: #995700;
       display: flex;
       justify-content: flex-start;
       align-items: center;
       flex-direction: column;
-      padding: 1rem;
+      padding: 0.5rem;
       padding-top: calc(20vh - 3rem);
       text-align: center;
       box-sizing: border-box;
@@ -37,7 +41,8 @@
 
     input {
       padding: 0.6rem;
-      font-size: 1.2rem;
+      font-size: 1.4rem;
+      font-family: 'Treasure Map Deadhand', cursive, serif;
       border: 2px solid #c2a87c;
       border-radius: 6px;
       background: #2b2b2b;
@@ -46,6 +51,13 @@
       width: 80%;
       max-width: 300px;
       transition: border-color 0.3s;
+      outline: none;
+      text-transform: uppercase;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #c2a87c;
     }
 
     input.error {
@@ -84,12 +96,14 @@
       transition: opacity 3s ease-in;
       white-space: pre-wrap;
       text-align: left;
+      color: #c1e6f4;
+      font-weight: bold;
       text-shadow:
-        -1px -1px 0 #000,
-        1px -1px 0 #000,
-        -1px 1px 0 #000,
-        1px 1px 0 #000,
-        0 0 4px #000;
+        -1px -1px 0 var(--clue-shadow-color),
+        1px -1px 0 var(--clue-shadow-color),
+        -1px 1px 0 var(--clue-shadow-color),
+        1px 1px 0 var(--clue-shadow-color),
+        0 0 4px var(--clue-shadow-color);
     }
 
     .clue.visible {
@@ -280,6 +294,7 @@
           }
 
           input.value = '';
+          input.blur();
         } else {
           input.classList.add('error');
           setTimeout(() => input.classList.remove('error'), 500);
