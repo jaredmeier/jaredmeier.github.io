@@ -6,17 +6,27 @@
   <title>HUNT</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    html,
     body {
-      background: #1b1b1b url('https://www.transparenttextures.com/patterns/aged-paper.png');
-      font-family: 'Treasure Map Deadhand', cursive, serif;
-      color: #f4e1c1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      margin: 0;
+      padding: 0;
       height: 100vh;
+      overflow: hidden;
+    }
+
+    body {
+      background: #1b1b1b url('grunge-paper-background.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Treasure Map Deadhand', cursive, serif;
+      color: #f7ead3;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
       flex-direction: column;
       padding: 1rem;
+      padding-top: calc(20vh - 3rem);
       text-align: center;
+      box-sizing: border-box;
     }
 
     h1 {
@@ -67,11 +77,13 @@
 
     .clue {
       opacity: 0;
-      margin-top: 1.5rem;
-      font-size: 1.2rem;
-      max-width: 300px;
-      line-height: 1.4;
+      margin-top: 5rem;
+      font-size: 1.3rem;
+      max-width: 350px;
+      line-height: 1.8;
       transition: opacity 3s ease-in;
+      white-space: pre-wrap;
+      text-align: left;
     }
 
     .clue.visible {
@@ -99,18 +111,22 @@
 </head>
 
 <body>
-  <h1>Enter the Secret Key</h1>
+  <!-- <h1>Enter the Secret Key</h1> -->
   <input id="codeInput" type="text" placeholder="••••••" />
 
   <div id="clueBox" class="clue"></div>
 
   <script>
     // 🗝️ Dictionary of codes -> clues
+    // Questions –  
+    // what was the name of elliott smith’s band before he went solo?
+    // what is the name of the building they live in in Rosemary’s Baby?
+    // what was the name of the hot lesbian at moan and dove whom we often admired?
     const clues = {
-      "map1": "The treasure lies where the shadows meet at dusk.",
-      "key2": "Seek the place of laughter, beneath the old oak tree.",
-      "gem3": "Follow the whisper of the wind to the hidden stone.",
-      "finale": "🎉 Happy Birthday, Adventurer! 🎉"
+      "heat miser": "Near a place you know and love\n(where once a love was observed),\nthere is a chapel or something like,\nthat both shades from sun,\nand stages rave music all eve long,\nand holds by its side a key\nfor your adventure.",
+      "bramford": "I hear tell there is a place\nwhere you have rolled butt over face.\nIn fact it’s true, I have heard,\nin more than one sense of the word.\nAnd near this spot of mirth and glee,\na guard stands before the trees\nto keep your next prize safe and sound,\nuntil its bounty you have found.",
+      "molly": "There is a place where people play,\nthey smash those balls about all day!\nWe sit and watch them flail and writhe\nuntil proud nature’s call arrives!\nWe sneak into the leaves behind,\nand what fair treasure do we find?\nA wooden corpse that stands no more,\nyour key and prize are in its store.",
+      "finale": "🎉 You have reached the end!\nNow time to celebrate!!!??? 🎉"
     };
 
     const input = document.getElementById('codeInput');
@@ -120,10 +136,21 @@
       if (e.key === 'Enter') {
         const code = input.value.trim();
         if (clues[code]) {
+          // Set opacity to 0 immediately (no transition)
+          clueBox.style.transition = 'none';
+          clueBox.style.opacity = '0';
+
+          // Force reflow
+          void clueBox.offsetWidth;
+
+          // Update text content
           clueBox.textContent = clues[code];
-          clueBox.classList.remove('visible');
-          void clueBox.offsetWidth; // restart animation trick
-          clueBox.classList.add('visible');
+
+          // Re-enable transition and fade in
+          requestAnimationFrame(() => {
+            clueBox.style.transition = 'opacity 3s ease-in';
+            clueBox.style.opacity = '1';
+          });
 
           if (code === 'finale') {
             launchBalloons();
