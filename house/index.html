@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bed Dibs — Book Your Spot</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FDF6EE;
+    --bg-card: #FFFFFF;
+    --text: #2D2A26;
+    --text-muted: #8A857D;
+    --border: #E8E0D6;
+    --accent: #D96B3A;
+    --accent-hover: #C25A2D;
+    --accent-light: #FFF0E8;
+    --success: #4A9E6B;
+    --success-light: #E8F5ED;
+    --taken-bg: #F2EDE8;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 30px rgba(0,0,0,0.1);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ---- HEADER ---- */
+  .header {
+    text-align: center;
+    padding: 40px 20px 24px;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--text);
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+  }
+  .header .subtitle {
+    color: var(--text-muted);
+    font-size: 1rem;
+    font-weight: 400;
+  }
+  .header .dates {
+    display: inline-block;
+    margin-top: 12px;
+    background: var(--accent-light);
+    color: var(--accent);
+    font-weight: 700;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+  }
+
+  /* ---- SETUP BANNER ---- */
+  .setup-banner {
+    max-width: 600px;
+    margin: 20px auto;
+    background: #FFF3CD;
+    border: 1px solid #FFDA6A;
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    text-align: center;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+  .setup-banner code {
+    background: rgba(0,0,0,0.06);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    word-break: break-all;
+  }
+  .setup-banner input {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px 12px;
+    border: 1px solid #FFDA6A;
+    border-radius: var(--radius-sm);
+    font-family: monospace;
+    font-size: 0.85rem;
+  }
+  .setup-banner button {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+
+  /* ---- WHO ARE YOU ---- */
+  .user-select {
+    max-width: 600px;
+    margin: 0 auto 24px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .user-select label {
+    font-weight: 700;
+    font-size: 0.95rem;
+    white-space: nowrap;
+  }
+  .user-select select {
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    background: var(--bg-card);
+    min-width: 160px;
+    cursor: pointer;
+  }
+  .user-select .add-btn {
+    background: none;
+    border: 1px dashed var(--border);
+    color: var(--text-muted);
+    padding: 8px 14px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+  }
+  .user-select .add-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* ---- GRID ---- */
+  .grid-wrapper {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+    overflow-x: auto;
+  }
+
+  .booking-grid {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 700px;
+  }
+
+  .booking-grid th {
+    padding: 10px 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    text-align: center;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 2;
+  }
+  .booking-grid th:first-child {
+    text-align: left;
+    padding-left: 16px;
+    min-width: 150px;
+  }
+
+  .booking-grid .room-header td {
+    padding: 20px 8px 6px 16px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    letter-spacing: 0.03em;
+    border: none;
+  }
+
+  .booking-grid .bed-row td {
+    padding: 4px;
+    vertical-align: middle;
+  }
+  .booking-grid .bed-row td:first-child {
+    padding-left: 16px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+  .booking-grid .bed-row td:first-child .bed-icon {
+    margin-right: 6px;
+    font-size: 1rem;
+  }
+
+  /* ---- CELLS ---- */
+  .cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-size: 0.82rem;
+    font-weight: 500;
+    user-select: none;
+    position: relative;
+  }
+
+  .cell.open {
+    background: var(--bg-card);
+    border: 1px dashed var(--border);
+    color: var(--text-muted);
+  }
+  .cell.open:hover {
+    border-color: var(--accent);
+    background: var(--accent-light);
+    color: var(--accent);
+    transform: scale(1.03);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .cell.booked {
+    border: 1px solid transparent;
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  }
+  .cell.booked:hover .cancel-x {
+    opacity: 1;
+  }
+  .cancel-x {
+    position: absolute;
+    top: 2px;
+    right: 6px;
+    opacity: 0;
+    font-size: 0.75rem;
+    transition: opacity 0.15s;
+    background: rgba(0,0,0,0.2);
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cell.mine {
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* ---- PERSON COLORS ---- */
+  .color-0  { background: #D96B3A; }
+  .color-1  { background: #4A9E6B; }
+  .color-2  { background: #5B7FBF; }
+  .color-3  { background: #C75A8A; }
+  .color-4  { background: #8B6EBF; }
+  .color-5  { background: #C4903D; }
+  .color-6  { background: #5BAFAF; }
+  .color-7  { background: #BF5B5B; }
+  .color-8  { background: #6B8F5B; }
+  .color-9  { background: #7A7A7A; }
+  .color-10 { background: #A0522D; }
+  .color-11 { background: #4682B4; }
+  .color-12 { background: #9370DB; }
+  .color-13 { background: #CD853F; }
+  .color-14 { background: #20B2AA; }
+
+  /* ---- LEGEND ---- */
+  .legend {
+    max-width: 960px;
+    margin: -30px auto 40px;
+    padding: 0 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 4px;
+  }
+
+  /* ---- LOADING / STATUS ---- */
+  .status-bar {
+    text-align: center;
+    padding: 8px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    min-height: 30px;
+  }
+  .status-bar.error { color: #BF5B5B; }
+  .status-bar.success { color: var(--success); }
+
+  .loading-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ---- MODAL ---- */
+  .modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-backdrop.active { display: flex; }
+  .modal {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 28px;
+    width: 90%;
+    max-width: 360px;
+    box-shadow: var(--shadow-lg);
+  }
+  .modal h3 {
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 12px;
+    font-size: 1.2rem;
+  }
+  .modal input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    margin-bottom: 14px;
+  }
+  .modal-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  .modal-actions button {
+    padding: 8px 18px;
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: none;
+  }
+  .modal-actions .cancel-btn {
+    background: var(--taken-bg);
+    color: var(--text-muted);
+  }
+  .modal-actions .confirm-btn {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 600px) {
+    .header { padding: 28px 16px 16px; }
+    .booking-grid th, .booking-grid td { padding: 3px; }
+    .cell { height: 42px; font-size: 0.72rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ SETUP BANNER (only visible before URL is configured) ============ -->
+<div class="setup-banner" id="setupBanner" style="display:none;">
+  <strong>One-time setup:</strong> Paste your Google Apps Script Web App URL below.
+  <input type="text" id="apiUrlInput" placeholder="https://script.google.com/macros/s/...../exec">
+  <button onclick="saveApiUrl()">Save &amp; Connect</button>
+</div>
+
+<div class="header">
+  <h1>Bed Dibs</h1>
+  <p class="subtitle">Pick your name, click a bed, claim your spot.</p>
+  <div class="dates">July 3 – July 10, 2026</div>
+</div>
+
+<div class="status-bar" id="statusBar"></div>
+
+<!-- ============ USER SELECT ============ -->
+<div class="user-select" id="userSelect" style="display:none;">
+  <label for="nameDropdown">I am:</label>
+  <select id="nameDropdown" onchange="onNameChange()">
+    <option value="">— pick your name —</option>
+  </select>
+  <button class="add-btn" onclick="openAddNameModal()">+ Add myself</button>
+</div>
+
+<!-- ============ BOOKING GRID ============ -->
+<div class="grid-wrapper" id="gridWrapper" style="display:none;">
+  <table class="booking-grid" id="bookingGrid"></table>
+</div>
+
+<div class="legend" id="legend"></div>
+
+<!-- ============ ADD NAME MODAL ============ -->
+<div class="modal-backdrop" id="addNameModal">
+  <div class="modal">
+    <h3>Add Your Name</h3>
+    <input type="text" id="newNameInput" placeholder="Your first name" maxlength="20"
+           onkeydown="if(event.key==='Enter')confirmAddName()">
+    <div class="modal-actions">
+      <button class="cancel-btn" onclick="closeAddNameModal()">Cancel</button>
+      <button class="confirm-btn" onclick="confirmAddName()">Add</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// CONFIG
+// ============================================================
+const BEDS = [
+  { room: 'Bedroom 1', beds: [{ id: 'br1-king', label: 'King', icon: '🛏️' }] },
+  { room: 'Bedroom 2', beds: [{ id: 'br2-queen', label: 'Queen', icon: '🛏️' }] },
+  { room: 'Bedroom 3', beds: [
+    { id: 'br3-twin-a', label: 'Twin A', icon: '🛏️' },
+    { id: 'br3-twin-b', label: 'Twin B', icon: '🛏️' }
+  ]},
+  { room: 'Bedroom 4', beds: [
+    { id: 'br4-double', label: 'Double', icon: '🛏️' },
+    { id: 'br4-full',   label: 'Full',   icon: '🛏️' }
+  ]},
+  { room: 'Living Room', beds: [{ id: 'lr-couch', label: 'Couch', icon: '🛋️' }] }
+];
+
+const DATES = [];
+for (let d = 3; d <= 9; d++) {
+  const dateStr = `2026-07-${String(d).padStart(2, '0')}`;
+  DATES.push(dateStr);
+}
+
+const DAY_LABELS = ['Fri 7/3', 'Sat 7/4', 'Sun 7/5', 'Mon 7/6', 'Tue 7/7', 'Wed 7/8', 'Thu 7/9'];
+
+// ============================================================
+// STATE
+// ============================================================
+let API_URL = localStorage.getItem('beddibs_api_url') || '';
+let bookings = {};   // key: `${bedId}|${date}` => name
+let names = [];
+let currentUser = localStorage.getItem('beddibs_user') || '';
+let nameColorMap = {};
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', () => {
+  if (!API_URL) {
+    document.getElementById('setupBanner').style.display = 'block';
+  } else {
+    init();
+  }
+});
+
+function saveApiUrl() {
+  const url = document.getElementById('apiUrlInput').value.trim();
+  if (!url.startsWith('https://script.google.com/')) {
+    alert('That doesn\'t look like a Google Apps Script URL. It should start with https://script.google.com/');
+    return;
+  }
+  API_URL = url;
+  localStorage.setItem('beddibs_api_url', url);
+  document.getElementById('setupBanner').style.display = 'none';
+  init();
+}
+
+async function init() {
+  showStatus('<span class="loading-spinner"></span> Loading bookings…');
+  document.getElementById('userSelect').style.display = 'flex';
+  document.getElementById('gridWrapper').style.display = 'block';
+  buildGrid();
+  await fetchAll();
+}
+
+// ============================================================
+// API CALLS
+// ============================================================
+async function apiCall(params) {
+  const url = new URL(API_URL);
+  Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
+  try {
+    const resp = await fetch(url.toString());
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    return await resp.json();
+  } catch (err) {
+    showStatus('Connection error — check your Apps Script URL.', 'error');
+    throw err;
+  }
+}
+
+async function fetchAll() {
+  try {
+    const data = await apiCall({ action: 'getAll' });
+    bookings = {};
+    (data.bookings || []).forEach(b => {
+      bookings[`${b.bed}|${b.date}`] = b.name;
+    });
+    names = data.names || [];
+    assignColors();
+    populateNameDropdown();
+    renderGrid();
+    renderLegend();
+    showStatus('');
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function bookBed(bedId, date) {
+  if (!currentUser) {
+    showStatus('Pick your name first!', 'error');
+    return;
+  }
+  const key = `${bedId}|${date}`;
+  if (bookings[key]) {
+    if (bookings[key] === currentUser) {
+      // Cancel own booking
+      showStatus('<span class="loading-spinner"></span> Cancelling…');
+      const result = await apiCall({ action: 'cancel', bed: bedId, date: date });
+      if (result.status === 'ok') {
+        delete bookings[key];
+        renderGrid();
+        renderLegend();
+        showStatus('Cancelled!', 'success');
+        setTimeout(() => showStatus(''), 2000);
+      }
+    } else {
+      showStatus(`That's ${bookings[key]}'s spot!`, 'error');
+      setTimeout(() => showStatus(''), 2500);
+    }
+    return;
+  }
+  showStatus('<span class="loading-spinner"></span> Booking…');
+  const result = await apiCall({ action: 'book', bed: bedId, date: date, name: currentUser });
+  if (result.status === 'ok') {
+    bookings[key] = currentUser;
+    renderGrid();
+    renderLegend();
+    showStatus('Booked!', 'success');
+    setTimeout(() => showStatus(''), 2000);
+  } else if (result.status === 'taken') {
+    showStatus(result.message, 'error');
+    await fetchAll();
+  }
+}
+
+async function addNameToSheet(name) {
+  const result = await apiCall({ action: 'addName', name: name });
+  if (result.status === 'ok' || result.status === 'exists') {
+    if (!names.includes(name)) names.push(name);
+    assignColors();
+    populateNameDropdown();
+    currentUser = name;
+    localStorage.setItem('beddibs_user', name);
+    document.getElementById('nameDropdown').value = name;
+    renderGrid();
+    renderLegend();
+  }
+  return result;
+}
+
+// ============================================================
+// COLORS
+// ============================================================
+function assignColors() {
+  const allNames = new Set([...names, ...Object.values(bookings)]);
+  let i = 0;
+  allNames.forEach(n => {
+    if (!(n in nameColorMap)) {
+      nameColorMap[n] = i % 15;
+      i++;
+    }
+  });
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+function buildGrid() {
+  const table = document.getElementById('bookingGrid');
+  // Header row
+  let html = '<thead><tr><th></th>';
+  DAY_LABELS.forEach(d => { html += `<th>${d}</th>`; });
+  html += '</tr></thead><tbody>';
+  table.innerHTML = html;
+}
+
+function renderGrid() {
+  const tbody = document.getElementById('bookingGrid').querySelector('tbody') ||
+                document.getElementById('bookingGrid');
+  // Rebuild tbody
+  let html = '';
+  BEDS.forEach(room => {
+    html += `<tr class="room-header"><td colspan="${DATES.length + 1}">${room.room}</td></tr>`;
+    room.beds.forEach(bed => {
+      html += `<tr class="bed-row"><td><span class="bed-icon">${bed.icon}</span>${bed.label}</td>`;
+      DATES.forEach(date => {
+        const key = `${bed.id}|${date}`;
+        const occupant = bookings[key];
+        if (occupant) {
+          const colorIdx = nameColorMap[occupant] ?? 0;
+          const isMine = occupant === currentUser;
+          html += `<td><div class="cell booked color-${colorIdx} ${isMine ? 'mine' : ''}"
+                        onclick="bookBed('${bed.id}','${date}')"
+                        title="${occupant}${isMine ? ' (click to cancel)' : ''}"
+                        >${occupant}${isMine ? '<span class=\\"cancel-x\\">✕</span>' : ''}</div></td>`;
+        } else {
+          html += `<td><div class="cell open"
+                        onclick="bookBed('${bed.id}','${date}')"
+                        title="Book this spot">+</div></td>`;
+        }
+      });
+      html += '</tr>';
+    });
+  });
+
+  // Replace tbody content
+  let tbodyEl = document.getElementById('bookingGrid').querySelector('tbody');
+  if (!tbodyEl) {
+    tbodyEl = document.createElement('tbody');
+    document.getElementById('bookingGrid').appendChild(tbodyEl);
+  }
+  tbodyEl.innerHTML = html;
+}
+
+function renderLegend() {
+  const activePeople = [...new Set(Object.values(bookings))];
+  const legend = document.getElementById('legend');
+  if (activePeople.length === 0) {
+    legend.innerHTML = '';
+    return;
+  }
+  legend.innerHTML = activePeople.map(name => {
+    const colorIdx = nameColorMap[name] ?? 0;
+    return `<div class="legend-item"><div class="legend-dot color-${colorIdx}"></div>${name}</div>`;
+  }).join('');
+}
+
+function populateNameDropdown() {
+  const dd = document.getElementById('nameDropdown');
+  const prev = dd.value || currentUser;
+  dd.innerHTML = '<option value="">— pick your name —</option>';
+  names.forEach(n => {
+    const opt = document.createElement('option');
+    opt.value = n;
+    opt.textContent = n;
+    dd.appendChild(opt);
+  });
+  if (prev && names.includes(prev)) {
+    dd.value = prev;
+    currentUser = prev;
+  }
+}
+
+function onNameChange() {
+  currentUser = document.getElementById('nameDropdown').value;
+  localStorage.setItem('beddibs_user', currentUser);
+  renderGrid();
+}
+
+// ============================================================
+// STATUS
+// ============================================================
+function showStatus(msg, type) {
+  const bar = document.getElementById('statusBar');
+  bar.innerHTML = msg;
+  bar.className = 'status-bar' + (type ? ` ${type}` : '');
+}
+
+// ============================================================
+// ADD NAME MODAL
+// ============================================================
+function openAddNameModal() {
+  document.getElementById('addNameModal').classList.add('active');
+  document.getElementById('newNameInput').value = '';
+  setTimeout(() => document.getElementById('newNameInput').focus(), 100);
+}
+
+function closeAddNameModal() {
+  document.getElementById('addNameModal').classList.remove('active');
+}
+
+async function confirmAddName() {
+  const name = document.getElementById('newNameInput').value.trim();
+  if (!name) return;
+  closeAddNameModal();
+  showStatus('<span class="loading-spinner"></span> Adding you…');
+  await addNameToSheet(name);
+  showStatus(`Welcome, ${name}!`, 'success');
+  setTimeout(() => showStatus(''), 2000);
+}
+</script>
+</body>
+</html>
